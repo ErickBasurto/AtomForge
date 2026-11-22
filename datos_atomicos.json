@@ -1,0 +1,912 @@
+{
+  "autores": [
+    "Basurto Valdivieso Erick",
+    "Coronel Reveles Guadalupe"
+  ],
+  "constante_R": 8.314,
+  "metales_base": [
+    {
+      "simbolo": "Cu",
+      "nombre": "Cobre puro (monocristal)",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.3615,
+      "fea": 0.74,
+      "tau_crss_mpa": 0.7,
+      "uso": "Conductores eléctricos y estudio clásico de deslizamiento {111}<110>"
+    },
+    {
+      "simbolo": "Al",
+      "nombre": "Aluminio puro (monocristal)",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.4049,
+      "fea": 0.74,
+      "tau_crss_mpa": 0.78,
+      "uso": "Estructuras aeroespaciales ligeras y ductilidad criogénica"
+    },
+    {
+      "simbolo": "Ni",
+      "nombre": "Níquel / Superaleación base Ni",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.3524,
+      "fea": 0.74,
+      "tau_crss_mpa": 3.2,
+      "uso": "Álabes monocristalinos orientados en [001] para turbinas de avión"
+    },
+    {
+      "simbolo": "Fe-α",
+      "nombre": "Hierro Ferrítico (a temperatura ambiente)",
+      "estructura": "BCC",
+      "parametro_red_nm": 0.2866,
+      "fea": 0.68,
+      "tau_crss_mpa": 27.5,
+      "uso": "Matriz base de aceros al carbono; presenta transición dúctil-frágil"
+    },
+    {
+      "simbolo": "Fe-γ",
+      "nombre": "Hierro Austenítico (> 912 °C)",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.3589,
+      "fea": 0.74,
+      "tau_crss_mpa": 12.0,
+      "uso": "Fase huésped para tratamientos de cementación y temple de aceros"
+    }
+  ],
+  "sistemas_cristalinos": {
+    "FCC": [
+      {
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          -1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          0,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          0,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          0,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          -1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          0,
+          1,
+          1
+        ]
+      }
+    ],
+    "BCC": [
+      {
+        "plano": [
+          1,
+          1,
+          0
+        ],
+        "direccion": [
+          -1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          0
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          0
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          0
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          1
+        ],
+        "direccion": [
+          -1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          -1
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          -1
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          -1
+        ],
+        "direccion": [
+          -1,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  "direcciones_preset": [
+    {
+      "etiqueta": "[1 0 0] — Eje cúbico (orientación de álabes monocristalinos)",
+      "uvw": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "etiqueta": "[1 1 0] — Diagonal de cara",
+      "uvw": [
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "etiqueta": "[1 1 1] — Diagonal principal del cubo",
+      "uvw": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "etiqueta": "[3 2 1] — Dirección asimétrica (alta actividad de deslizamiento)",
+      "uvw": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "etiqueta": "[2 2 3] — Dirección oblicua de alto índice",
+      "uvw": [
+        2,
+        2,
+        3
+      ]
+    }
+  ],
+  "ejemplos_schmid": {
+    "FCC_321": [
+      {
+        "id": 11,
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ],
+        "cos_phi": 0.6172,
+        "cos_lambda": 0.7559,
+        "m": 0.4666
+      },
+      {
+        "id": 2,
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ],
+        "cos_phi": 0.9258,
+        "cos_lambda": 0.378,
+        "m": 0.3499
+      },
+      {
+        "id": 12,
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          0,
+          1,
+          1
+        ],
+        "cos_phi": 0.6172,
+        "cos_lambda": 0.5669,
+        "m": 0.3499
+      },
+      {
+        "id": 8,
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ],
+        "cos_phi": 0.3086,
+        "cos_lambda": 0.9449,
+        "m": 0.2916
+      }
+    ],
+    "BCC_321": [
+      {
+        "id": 6,
+        "plano": [
+          1,
+          0,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ],
+        "cos_phi": 0.7559,
+        "cos_lambda": 0.6172,
+        "m": 0.4666
+      },
+      {
+        "id": 7,
+        "plano": [
+          1,
+          0,
+          -1
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ],
+        "cos_phi": 0.378,
+        "cos_lambda": 0.9258,
+        "m": 0.3499
+      },
+      {
+        "id": 10,
+        "plano": [
+          0,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ],
+        "cos_phi": 0.5669,
+        "cos_lambda": 0.6172,
+        "m": 0.3499
+      },
+      {
+        "id": 2,
+        "plano": [
+          1,
+          1,
+          0
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ],
+        "cos_phi": 0.9449,
+        "cos_lambda": 0.3086,
+        "m": 0.2916
+      }
+    ],
+    "FCC_100": [
+      {
+        "id": 1,
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          -1,
+          0
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      },
+      {
+        "id": 2,
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      },
+      {
+        "id": 5,
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      },
+      {
+        "id": 6,
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      }
+    ]
+  },
+  "mecanismos_difusion": [
+    {
+      "id": "C_en_Fe_gamma",
+      "nombre": "Carbono intersticial en Fe-γ (Austenita FCC)",
+      "descripcion": "Proceso industrial estándar de cementación (850–980 °C). Aunque la red FCC es más compacta (FEA=0.74), disuelve hasta 2.14% C y evita crecimiento excesivo de grano.",
+      "D0": 2.3e-05,
+      "Qd": 148000.0,
+      "T_min_c": 850,
+      "T_max_c": 1000,
+      "T_default_c": 925,
+      "C0_default": 0.15,
+      "Cs_default": 1.0
+    },
+    {
+      "id": "C_en_Fe_alpha",
+      "nombre": "Carbono intersticial en Fe-α (Ferrita BCC)",
+      "descripcion": "Difusión en red BCC más abierta (FEA=0.68): requiere menor energía de activación (80 kJ/mol), por lo que el carbono salta mucho más rápido, pero su solubilidad máxima es muy baja (0.022% C).",
+      "D0": 6.2e-07,
+      "Qd": 80000.0,
+      "T_min_c": 500,
+      "T_max_c": 720,
+      "T_default_c": 650,
+      "C0_default": 0.005,
+      "Cs_default": 0.022
+    },
+    {
+      "id": "N_en_Fe_alpha",
+      "nombre": "Nitruración en Fe-α (Nitrógeno en Ferrita BCC)",
+      "descripcion": "Endurecimiento superficial a baja temperatura (500–580 °C) sin necesidad de temple posterior, evitando distorsiones geométricas en engranes de precisión.",
+      "D0": 3e-07,
+      "Qd": 76150.0,
+      "T_min_c": 480,
+      "T_max_c": 580,
+      "T_default_c": 530,
+      "C0_default": 0.01,
+      "Cs_default": 0.6
+    }
+  ],
+  "tabla_erf": [
+    {
+      "z": 0.0,
+      "erf": 0.0
+    },
+    {
+      "z": 0.05,
+      "erf": 0.056372
+    },
+    {
+      "z": 0.1,
+      "erf": 0.112463
+    },
+    {
+      "z": 0.15,
+      "erf": 0.167996
+    },
+    {
+      "z": 0.2,
+      "erf": 0.222703
+    },
+    {
+      "z": 0.25,
+      "erf": 0.276326
+    },
+    {
+      "z": 0.3,
+      "erf": 0.328627
+    },
+    {
+      "z": 0.35,
+      "erf": 0.379382
+    },
+    {
+      "z": 0.4,
+      "erf": 0.428392
+    },
+    {
+      "z": 0.45,
+      "erf": 0.475482
+    },
+    {
+      "z": 0.5,
+      "erf": 0.5205
+    },
+    {
+      "z": 0.55,
+      "erf": 0.563323
+    },
+    {
+      "z": 0.6,
+      "erf": 0.603856
+    },
+    {
+      "z": 0.65,
+      "erf": 0.642029
+    },
+    {
+      "z": 0.7,
+      "erf": 0.677801
+    },
+    {
+      "z": 0.75,
+      "erf": 0.711156
+    },
+    {
+      "z": 0.8,
+      "erf": 0.742101
+    },
+    {
+      "z": 0.85,
+      "erf": 0.770668
+    },
+    {
+      "z": 0.9,
+      "erf": 0.796908
+    },
+    {
+      "z": 0.95,
+      "erf": 0.820891
+    },
+    {
+      "z": 1.0,
+      "erf": 0.842701
+    },
+    {
+      "z": 1.05,
+      "erf": 0.862436
+    },
+    {
+      "z": 1.1,
+      "erf": 0.880205
+    },
+    {
+      "z": 1.15,
+      "erf": 0.896124
+    },
+    {
+      "z": 1.2,
+      "erf": 0.910314
+    },
+    {
+      "z": 1.25,
+      "erf": 0.9229
+    },
+    {
+      "z": 1.3,
+      "erf": 0.934008
+    },
+    {
+      "z": 1.35,
+      "erf": 0.943762
+    },
+    {
+      "z": 1.4,
+      "erf": 0.952285
+    },
+    {
+      "z": 1.45,
+      "erf": 0.959695
+    },
+    {
+      "z": 1.5,
+      "erf": 0.966105
+    },
+    {
+      "z": 1.55,
+      "erf": 0.971623
+    },
+    {
+      "z": 1.6,
+      "erf": 0.976348
+    },
+    {
+      "z": 1.65,
+      "erf": 0.980376
+    },
+    {
+      "z": 1.7,
+      "erf": 0.98379
+    },
+    {
+      "z": 1.75,
+      "erf": 0.986672
+    },
+    {
+      "z": 1.8,
+      "erf": 0.989091
+    },
+    {
+      "z": 1.85,
+      "erf": 0.991111
+    },
+    {
+      "z": 1.9,
+      "erf": 0.99279
+    },
+    {
+      "z": 1.95,
+      "erf": 0.994179
+    },
+    {
+      "z": 2.0,
+      "erf": 0.995322
+    },
+    {
+      "z": 2.05,
+      "erf": 0.996258
+    },
+    {
+      "z": 2.1,
+      "erf": 0.997021
+    },
+    {
+      "z": 2.15,
+      "erf": 0.997639
+    },
+    {
+      "z": 2.2,
+      "erf": 0.998137
+    },
+    {
+      "z": 2.25,
+      "erf": 0.998537
+    },
+    {
+      "z": 2.3,
+      "erf": 0.998857
+    },
+    {
+      "z": 2.35,
+      "erf": 0.999111
+    },
+    {
+      "z": 2.4,
+      "erf": 0.999311
+    },
+    {
+      "z": 2.45,
+      "erf": 0.999469
+    },
+    {
+      "z": 2.5,
+      "erf": 0.999593
+    },
+    {
+      "z": 2.55,
+      "erf": 0.999689
+    },
+    {
+      "z": 2.6,
+      "erf": 0.999764
+    },
+    {
+      "z": 2.65,
+      "erf": 0.999822
+    },
+    {
+      "z": 2.7,
+      "erf": 0.999866
+    },
+    {
+      "z": 2.75,
+      "erf": 0.999899
+    },
+    {
+      "z": 2.8,
+      "erf": 0.999925
+    },
+    {
+      "z": 2.85,
+      "erf": 0.999944
+    },
+    {
+      "z": 2.9,
+      "erf": 0.999959
+    },
+    {
+      "z": 2.95,
+      "erf": 0.99997
+    },
+    {
+      "z": 3.0,
+      "erf": 0.999978
+    }
+  ],
+  "retos_clase": [
+    {
+      "id": "reto_cristal",
+      "titulo": "Reto 1: Monocristal bajo Tensión Uniaxial",
+      "pregunta": "Se aplica un esfuerzo axial de σ = 80 MPa en la dirección [3 2 1] a un monocristal con esfuerzo cortante crítico τ_CRSS = 25 MPa. Si el cristal es FCC ({111}<110>), ¿ocurre deslizamiento plástico? ¿Y si es BCC ({110}<111>)?",
+      "pista": "Compara τ_R = σ · cos(φ) · cos(λ) del sistema más favorable contra τ_CRSS = 25 MPa.",
+      "respuesta_corta": "En FCC SÍ desliza (τ_R = 27.99 MPa > 25 MPa en el sistema (111)[10-1], con m = 0.3499). En BCC NO desliza todavía (τ_R máximo = 23.33 MPa < 25 MPa en (110)[-11-1], con m = 0.2916)."
+    },
+    {
+      "id": "reto_difusion",
+      "titulo": "Reto 2: Ingeniería de Cementación en Engranes",
+      "pregunta": "Un engrane de acero SAE 1015 (C₀ = 0.15%) entra a un horno de cementación con atmósfera Cs = 1.00% C durante t = 6 horas. Si queremos que a una profundidad de x = 0.60 mm alcance al menos Cx = 0.40% C para poder templarlo, ¿basta con hornear a 880 °C o necesitamos subir a 930 °C?",
+      "pista": "Usa DiffusioLab (Pestaña 3) con C₀ = 0.15%, Cs = 1.00%, t = 6 h y prueba ambas temperaturas.",
+      "respuesta_corta": "A 880 °C la capa efectiva (0.40% C) apenas llega a ~0.46 mm (insuficiente). Subiendo a 930 °C el coeficiente D se duplica por Arrhenius y la capa alcanza ~0.64 mm, cumpliendo el diseño."
+    }
+  ],
+  "metodologia": {
+    "titulo": "Fundamentos Físicos y Metodología de Cálculo",
+    "resumen": "AtomForge modela dos fenómenos gobernados por defectos cristalinos (Unidades 3 y 4): el deslizamiento de dislocaciones mediante la Ley de Schmid y la difusión atómica asistida térmicamente mediante Arrhenius y la Segunda Ley de Fick.",
+    "pasos": [
+      {
+        "paso": "1. Generación de Familias Cristalográficas",
+        "descripcion": "A partir de los índices de Miller se construyeron computacionalmente los 12 sistemas compactos de deslizamiento para redes FCC ({111}<110>) y los 12 sistemas primarios para BCC ({110}<111>), verificando ortogonalidad n · s = 0."
+      },
+      {
+        "paso": "2. Ley de Schmid y Esfuerzo Cortante Resuelto",
+        "descripcion": "Para cualquier eje de carga [u v w], se calculan los cosenos directores cos(φ) respecto a la normal del plano y cos(λ) respecto a la dirección de deslizamiento. El sistema activo es el que maximiza m = cos(φ)cos(λ) y supera τ_CRSS."
+      },
+      {
+        "paso": "3. Coeficiente de Difusión por Arrhenius",
+        "descripcion": "La movilidad atómica por vacancias e intersticios se calcula con D(T) = D₀ · exp(-Qd / (R · T)), usando constantes experimentales de carbono y nitrógeno en hierro FCC y BCC (R = 8.314 J/mol·K)."
+      },
+      {
+        "paso": "4. Perfil de Concentración (Segunda Ley de Fick)",
+        "descripcion": "Bajo condición de fuente superficial constante Cs en un sólido semi-infinito, la concentración a profundidad x y tiempo t se resuelve exactamente mediante (Cs - C(x,t))/(Cs - C₀) = erf(x / (2√(D·t)))."
+      }
+    ]
+  }
+}

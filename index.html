@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head><script type='text/javascript' nonce='5AbCyjB69cGnkNFMiTH27w==' src='https://contribution.usercontent.google.com/KK661cyWuxusO60bey8osT4cGL9mBPv3AWqdSvypH-wmVoCyOaUIePKcnsoj0KqH3V207EEZ5W9EpYxI1mxoaV2ummYhg9xGeeyKyOq8JtatZ8DlE-gGlfkoKvyvMeez7jylpB30IgzyW9AuSCmaK-_oHZ3xoIhuniveZAnSzzy5azq5q3QiR9FyvG7Gz9KHNc7bgvFIu-u0ycnzM4RkYSv2oZFBe_29AXcOttGRMuPrBRH7B92TicdmWX1d1owwvQOqHunKTxa-vFpqnvb5ShXyBiq-PbW-b6dY3aKnV0mvVAHkqQsbSDYQ_ZTF4OofFRTwyNEdlrOvYHyr3QxlUdXj0jtZaBXM3W2-V8zAN3TQ_NzYFvzsrQ29Fj3dheagZ736DYlUjGp5ER8-APm0rH5paDhZYu7obKMcCdVBl3884nQO77-67cJbx8vNSSeJ9XqfzdEiTSgjsRqsSG_HP3K7xVGcJLloR10omvwvJISU4zuj4Mqktax9fN6pCEkO4SFOSlwsXCkx3oppETXgZ-4Glshszs9K0Iy_EnaAeGLNc7OjelFgvSbDZhoXwoSN8b1iDcmCVSnXo1njgIgnmIQ2F5-drvxE19s-Vmd4ZLSTC7-Nnprpn_NDafunJCRoEzadIz5TAHv1mkBQnvQ4iickTtWWhtUaMRFKvKMfvT78_GGvmq_WziRtw_KMsY-60mbysuSl4aMCCKrqdBWWwqiXPYrjADw3KOBr_7CPKY14Qhhg15FO_NdrnQ'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AtomForge — Laboratorio Interactivo de Cristalografía y Difusión Atómica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            lab: {
+              bg: '#0B1120',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F1F5F9',
+              muted: '#94A3B8',
+              cyan: '#38BDF8',
+              amber: '#F59E0B',
+              emerald: '#10B981',
+              rose: '#F43F5E',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      background-color: #0B1120;
+      color: #F1F5F9;
+      font-family: 'Inter', system-ui, sans-serif;
+      background-image:
+        radial-gradient(circle at 12% 8%, rgba(56, 189, 248, 0.08), transparent 36%),
+        radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.06), transparent 34%),
+        radial-gradient(circle at 50% 95%, rgba(16, 185, 129, 0.06), transparent 40%);
+      min-height: 100vh;
+    }
+    .lab-card {
+      background-color: #111827;
+      border: 1px solid #1E293B;
+      border-radius: 1rem;
+    }
+    .lab-subcard {
+      background-color: rgba(15, 23, 42, 0.72);
+      border: 1px solid #1E293B;
+      border-radius: 0.75rem;
+    }
+    /* Custom dark range sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 9999px;
+      background: #1E293B;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #38BDF8;
+      border: 2px solid #0B1120;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.55);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background: #F59E0B;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background: #10B981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+    }
+    select, input[type="number"] {
+      background-color: #0F172A;
+      border: 1px solid #334155;
+      color: #F1F5F9;
+    }
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: #38BDF8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0B1120; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    .tab-btn {
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(16, 185, 129, 0.12));
+      border-color: #38BDF8;
+      color: #F1F5F9;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.15);
+    }
+    .mode-pill-active-exp {
+      background-color: #10B981;
+      color: #0B1120;
+      font-weight: 700;
+    }
+    .mode-pill-active-eng {
+      background-color: #38BDF8;
+      color: #0B1120;
+      font-weight: 700;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.35); }
+      50% { box-shadow: 0 0 16px 2px rgba(56, 189, 248, 0.22); }
+    }
+    .glow-active { animation: pulseGlow 2.4s infinite; }
+  </style>
+</head>
+<body class="antialiased selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 border-b border-[#1E293B] bg-[#0B1120]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <!-- Brand & Credits -->
+        <div class="flex items-start sm:items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400/20 via-emerald-400/15 to-amber-400/20 border border-sky-400/40 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-sky-400" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"></polygon>
+              <line x1="12" y1="2" x2="12" y2="22" opacity="0.5"></line>
+              <line x1="3" y1="7" x2="21" y2="17" opacity="0.5"></line>
+              <line x1="21" y1="7" x2="3" y2="17" opacity="0.5"></line>
+              <circle cx="12" cy="12" r="2.3" fill="#F59E0B" stroke="none"></circle>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-[#F1F5F9] leading-snug">
+              <span class="text-sky-400">AtomForge</span> — Laboratorio Interactivo de Cristalografía y Difusión Atómica
+            </h1>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5 text-xs text-slate-400">
+              <span>Autores: <strong id="header-authors" class="text-slate-200 font-medium">Basurto Valdivieso Erick · Coronel Reveles Guadalupe</strong></span>
+              <span class="hidden sm:inline text-slate-600">|</span>
+              <button id="btn-open-methodology" type="button" class="text-sky-400/90 hover:text-sky-300 underline decoration-sky-400/40 underline-offset-4 transition font-medium">
+                Fundamentos y Metodología
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Mode Switch -->
+        <div class="flex items-center justify-between lg:justify-end gap-3">
+          <div class="flex items-center gap-2 bg-[#111827] border border-[#1E293B] rounded-full p-1 shadow-inner" role="group" aria-label="Selector de modo de explicación">
+            <button id="btn-mode-explorador" type="button" class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm transition-all mode-pill-active-exp flex items-center gap-1.5">
+              <span>🧭</span>
+              <span>Modo Explorador</span>
+            </button>
+            <button id="btn-mode-ingeniero" type="button" class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+              <span>⚙️</span>
+              <span>Modo Ingeniero</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode Context Ribbon -->
+      <div id="mode-banner" class="mt-2.5 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-200 flex items-center justify-between gap-2">
+        <span id="mode-banner-text">
+          <strong>Modo Explorador activo:</strong> Explicaciones cotidianas, analogías visuales e indicadores tipo semáforo sin fórmulas complejas.
+        </span>
+        <span class="hidden md:inline font-mono text-[11px] text-emerald-300/80 shrink-0">CAMBIA EL MODO EN VIVO</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-2">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <button type="button" data-tab="tab-mapa" class="tab-btn active lab-card px-4 py-3 text-left flex items-center gap-3 hover:border-sky-400/50">
+        <span class="w-8 h-8 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 font-mono font-bold text-sm shrink-0">1</span>
+        <div>
+          <div class="text-sm font-semibold text-[#F1F5F9]">Mapa Atómico</div>
+          <div class="text-[11px] text-slate-400">Defectos, metales y casos reales</div>
+        </div>
+      </button>
+      <button type="button" data-tab="tab-crystal" class="tab-btn lab-card px-4 py-3 text-left flex items-center gap-3 hover:border-sky-400/50">
+        <span class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-mono font-bold text-sm shrink-0">2</span>
+        <div>
+          <div class="text-sm font-semibold text-[#F1F5F9]">CrystalSlip 3D</div>
+          <div class="text-[11px] text-slate-400">Deslizamiento y Ley de Schmid</div>
+        </div>
+      </button>
+      <button type="button" data-tab="tab-diffusio" class="tab-btn lab-card px-4 py-3 text-left flex items-center gap-3 hover:border-sky-400/50">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-mono font-bold text-sm shrink-0">3</span>
+        <div>
+          <div class="text-sm font-semibold text-[#F1F5F9]">DiffusioLab</div>
+          <div class="text-[11px] text-slate-400">Difusión térmica y coraza dura</div>
+        </div>
+      </button>
+      <button type="button" data-tab="tab-juegos" class="tab-btn lab-card px-4 py-3 text-left flex items-center gap-3 hover:border-sky-400/50">
+        <span class="w-8 h-8 rounded-lg bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 font-mono font-bold text-sm shrink-0">4</span>
+        <div>
+          <div class="text-sm font-semibold text-[#F1F5F9]">Minijuegos</div>
+          <div class="text-[11px] text-slate-400">Laboratorio de desafíos</div>
+        </div>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-16 space-y-6">
+
+    <!-- ==================== TAB 1: MAPA ATÓMICO ==================== -->
+    <section id="tab-mapa" class="tab-panel space-y-6">
+      <!-- Visual Comparison: Lineal vs Puntual -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- Defectos Lineales -->
+        <div class="lab-card p-5 sm:p-6 flex flex-col justify-between gap-4 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-sky-500/10 blur-3xl pointer-events-none"></div>
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">
+                DEFECTOS LINEALES (1D)
+              </span>
+              <span class="font-mono text-xs text-slate-400">→ CrystalSlip 3D</span>
+            </div>
+            <h2 class="text-xl font-bold text-[#F1F5F9] mb-2">Dislocaciones y Deslizamiento Plástico</h2>
+            <p class="mode-exp text-sm text-slate-300 leading-relaxed">
+              Los metales no son bloques rígidos perfectos: tienen filas de átomos ligeramente desacomodadas. Cuando empujas un metal con fuerza, esas filas <strong>se deslizan una sobre otra como si corrieras una alfombra arrugada</strong> o inclinaras una baraja de cartas. ¡Por eso un metal puede doblarse sin romperse!
+            </p>
+            <p class="mode-eng hidden text-sm text-slate-300 leading-relaxed">
+              Las <strong>dislocaciones de borde y tornillo</strong> permiten la deformación plástica a esfuerzos órdenes de magnitud menores al límite teórico. El deslizamiento ocurre preferentemente en planos y direcciones de máxima densidad atómica (<span class="font-mono text-sky-300">{111}&lt;110&gt;</span> en FCC y <span class="font-mono text-sky-300">{110}&lt;111&gt;</span> en BCC) cuando el esfuerzo cortante resuelto supera <span class="font-mono text-amber-300">τ_CRSS</span>.
+            </p>
+          </div>
+          <!-- Inline SVG Illustration: Slip Plane -->
+          <div class="lab-subcard p-3">
+            <svg viewbox="0 0 360 110" class="w-full h-24">
+              <defs>
+                <marker id="arrCyan" viewbox="0 0 10 10" refx="8" refy="5" markerwidth="6" markerheight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8"/>
+                </marker>
+                <marker id="arrAmber" viewbox="0 0 10 10" refx="8" refy="5" markerwidth="6" markerheight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B"/>
+                </marker>
+              </defs>
+              <!-- Slip plane dashed line -->
+              <line x1="20" y1="58" x2="340" y2="58" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="6 4"/>
+              <text x="262" y="52" fill="#F59E0B" font-size="9" font-family="JetBrains Mono">Plano de deslizamiento</text>
+              <!-- Top rows (shifted right) -->
+              <g fill="#38BDF8" opacity="0.9">
+                <circle cx="65" cy="24" r="8"/><circle cx="105" cy="24" r="8"/><circle cx="145" cy="24" r="8"/><circle cx="185" cy="24" r="8"/><circle cx="225" cy="24" r="8"/><circle cx="265" cy="24" r="8"/>
+                <circle cx="75" cy="46" r="8"/><circle cx="115" cy="46" r="8"/><circle cx="155" cy="46" r="8"/><circle cx="195" cy="46" r="8"/><circle cx="235" cy="46" r="8"/><circle cx="275" cy="46" r="8"/>
+              </g>
+              <!-- Bottom rows (stationary) -->
+              <g fill="#64748B">
+                <circle cx="50" cy="72" r="8"/><circle cx="90" cy="72" r="8"/><circle cx="130" cy="72" r="8"/><circle cx="170" cy="72" r="8"/><circle cx="210" cy="72" r="8"/><circle cx="250" cy="72" r="8"/>
+                <circle cx="50" cy="94" r="8"/><circle cx="90" cy="94" r="8"/><circle cx="130" cy="94" r="8"/><circle cx="170" cy="94" r="8"/><circle cx="210" cy="94" r="8"/><circle cx="250" cy="94" r="8"/>
+              </g>
+              <!-- Shear arrows -->
+              <line x1="295" y1="32" x2="342" y2="32" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrCyan)"/>
+              <line x1="342" y1="84" x2="295" y2="84" stroke="#F59E0B" stroke-width="2.5" marker-end="url(#arrAmber)"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Defectos Puntuales -->
+        <div class="lab-card p-5 sm:p-6 flex flex-col justify-between gap-4 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                DEFECTOS PUNTUALES (0D)
+              </span>
+              <span class="font-mono text-xs text-slate-400">→ DiffusioLab</span>
+            </div>
+            <h2 class="text-xl font-bold text-[#F1F5F9] mb-2">Vacancias, Intersticios y Difusión Atómica</h2>
+            <p class="mode-exp text-sm text-slate-300 leading-relaxed">
+              Entre los átomos grandes del hierro quedan diminutos huecos. Al calentar el metal en un horno, los átomos vibran con fuerza y <strong>átomos pequeños (como el carbono o nitrógeno) saltan hacia adentro</strong> ocupando esos huecos, creando una <strong>coraza exterior ultradura</strong> sin perder la tenacidad del centro.
+            </p>
+            <p class="mode-eng hidden text-sm text-slate-300 leading-relaxed">
+              La movilidad de especies en estado sólido ocurre por <strong>mecanismo de vacancias</strong> o <strong>difusión intersticial</strong>. Al elevar <span class="font-mono text-amber-300">T</span>, la energía térmica supera la barrera <span class="font-mono text-emerald-300">Q_d</span> según Arrhenius (<span class="font-mono text-sky-300">D = D₀ exp(-Q_d/RT)</span>), gobernando el perfil de concentración <span class="font-mono text-sky-300">C(x,t)</span> mediante la Segunda Ley de Fick.
+            </p>
+          </div>
+          <!-- Inline SVG Illustration: Interstitial Diffusion -->
+          <div class="lab-subcard p-3">
+            <svg viewbox="0 0 360 110" class="w-full h-24">
+              <!-- Host lattice -->
+              <g fill="#475569" stroke="#64748B" stroke-width="1">
+                <circle cx="48" cy="24" r="10"/><circle cx="98" cy="24" r="10"/><circle cx="148" cy="24" r="10"/><circle cx="198" cy="24" r="10"/><circle cx="248" cy="24" r="10"/><circle cx="298" cy="24" r="10"/>
+                <circle cx="48" cy="60" r="10"/><circle cx="98" cy="60" r="10"/><circle cx="148" cy="60" r="10"/><circle cx="198" cy="60" r="10"/><circle cx="248" cy="60" r="10"/><circle cx="298" cy="60" r="10"/>
+                <circle cx="48" cy="94" r="10"/><circle cx="98" cy="94" r="10"/><circle cx="148" cy="94" r="10"/><circle cx="198" cy="94" r="10"/><circle cx="248" cy="94" r="10"/><circle cx="298" cy="94" r="10"/>
+              </g>
+              <!-- Vacancy highlight -->
+              <circle cx="248" cy="60" r="10" fill="#0B1120" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="228" y="81" fill="#38BDF8" font-size="8.5" font-family="JetBrains Mono">Vacancia</text>
+              <!-- Interstitial hopping path -->
+              <path d="M 22 42 Q 48 34 73 42 T 123 42 T 173 77" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4 3"/>
+              <circle cx="22" cy="42" r="5" fill="#10B981" opacity="0.45"/>
+              <circle cx="73" cy="42" r="5" fill="#10B981" opacity="0.7"/>
+              <circle cx="123" cy="42" r="5.5" fill="#10B981"/>
+              <circle cx="173" cy="77" r="5.5" fill="#F59E0B"/>
+              <text x="12" y="13" fill="#10B981" font-size="9" font-family="JetBrains Mono">Superficie (Cs)</text>
+              <text x="260" y="13" fill="#94A3B8" font-size="9" font-family="JetBrains Mono">Núcleo (C₀)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- TWO HIGHLIGHTED REAL-WORLD APPLICATION CASES -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base sm:text-lg font-bold text-[#F1F5F9] flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            Casos de Aplicación en Ingeniería de Frontera
+          </h3>
+          <span class="text-xs text-slate-400 hidden sm:inline">Haz clic para cargar el escenario directamente en el simulador</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- Caso Aeroespacial -->
+          <div class="lab-card p-5 border-l-4 border-l-sky-400 flex flex-col justify-between gap-4 hover:border-sky-400/60 transition">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky-500/15 text-sky-300 text-xs font-semibold">
+                  ✈️ Caso Aeroespacial
+                </span>
+                <span class="font-mono text-xs text-sky-400/90">Superaleación Ni · [001]</span>
+              </div>
+              <h4 class="text-lg font-bold text-[#F1F5F9] mb-2">Álabes Monocristalinos de Turbina de Avión</h4>
+              <p class="mode-exp text-sm text-slate-300 leading-relaxed">
+                Dentro de un motor a reacción, las aspas giran a más de 10,000 rpm rodeadas de gases más calientes que el punto de fusión del metal. Para que no se estiren ni se rompan, cada álabe se cultiva como <strong>un solo cristal gigante de níquel orientado en la dirección [001]</strong>, bloqueando bordes débiles y controlando cómo absorbe los tirones centrífugos.
+              </p>
+              <p class="mode-eng hidden text-sm text-slate-300 leading-relaxed">
+                Los álabes de alta presión se solidifican direccionalmente como <strong>monocristales FCC de superaleación base Ni</strong> eliminando fronteras de grano (resistencia a termofluencia/creep). Al alinear el eje longitudinal con <span class="font-mono text-sky-300">[001]</span>, se minimiza el módulo de Young (<span class="font-mono text-sky-300">E_001</span>), reduciendo esfuerzos por fatiga térmica y distribuyendo simétricamente el factor de Schmid (<span class="font-mono text-amber-300">m = 0.4082</span>) en 8 sistemas equivalentes.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#1E293B]">
+              <div class="text-xs text-slate-400 font-mono">FCC · Eje [0 0 1] · σ = 70 MPa</div>
+              <button id="btn-case-aero" type="button" class="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-[#0B1120] font-semibold text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-sky-500/20">
+                <span>Probar en CrystalSlip 3D</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Caso Biomédico -->
+          <div class="lab-card p-5 border-l-4 border-l-emerald-400 flex flex-col justify-between gap-4 hover:border-emerald-400/60 transition">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 text-xs font-semibold">
+                  🧬 Caso Biomédico
+                </span>
+                <span class="font-mono text-xs text-emerald-400/90">Prótesis de Ti &amp; Stents</span>
+              </div>
+              <h4 class="text-lg font-bold text-[#F1F5F9] mb-2">Prótesis Ortopédicas de Titanio y Stents Cardiovasculares</h4>
+              <p class="mode-exp text-sm text-slate-300 leading-relaxed">
+                Una prótesis de cadera o un stent dentro de una arteria sufre millones de latidos y pasos. El <strong>deslizamiento controlado</strong> permite que el stent se expanda sin fracturarse, mientras que el <strong>endurecimiento superficial por difusión</strong> crea un escudo microscópico que evita el desgaste por fricción y <strong>frena la liberación de iones metálicos tóxicos</strong> al torrente sanguíneo.
+              </p>
+              <p class="mode-eng hidden text-sm text-slate-300 leading-relaxed">
+                En implantes ortopédicos (<span class="font-mono text-emerald-300">Ti-6Al-4V</span>) y stents vasculares, la orientación de textura cristalográfica modula la plasticidad sin falla por fatiga cíclica. Simultáneamente, tratamientos termoquímicos de <strong>nitruración/difusión a baja temperatura</strong> forman una capa superficial endurecida y pasiva que reduce el desgaste tribocorrosivo y bloquea la lixiviación de iones (<span class="font-mono text-amber-300">Ni²⁺, V, Al</span>) en fluidos fisiológicos.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#1E293B]">
+              <div class="text-xs text-slate-400 font-mono">Difusión baja T · Capa protectora</div>
+              <div class="flex flex-wrap gap-2">
+                <button id="btn-case-bio-diff" type="button" class="px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-[#0B1120] font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20">
+                  <span>Simular en DiffusioLab</span>
+                  <span>→</span>
+                </button>
+                <button id="btn-case-bio-slip" type="button" class="px-3 py-2 rounded-lg bg-[#0F172A] hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 font-medium text-xs transition">
+                  Ver carga BCC
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- METALES BASE CARDS (DYNAMIC FROM DATA.metales_base) -->
+      <div class="space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+          <h3 class="text-base sm:text-lg font-bold text-[#F1F5F9] flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+            Catálogo de Metales Base de Referencia
+          </h3>
+          <span class="text-xs text-slate-400">Haz clic en cualquier metal para probar su estructura en CrystalSlip 3D</span>
+        </div>
+        <div id="metales-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: CRYSTALSLIP 3D ==================== -->
+    <section id="tab-crystal" class="tab-panel hidden space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Left Controls Panel -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="lab-card p-5 space-y-5">
+            <div>
+              <h2 class="text-lg font-bold text-[#F1F5F9] flex items-center gap-2">
+                <span class="text-sky-400">◆</span> Parámetros del Monocristal
+              </h2>
+              <p class="mode-exp text-xs text-slate-400 mt-1">
+                Elige cómo están apilados los átomos, desde qué ángulo jalas el cristal y cuánta fuerza aplicas.
+              </p>
+              <p class="mode-eng hidden text-xs text-slate-400 mt-1">
+                Configura la red cristalina, el eje de carga uniaxial <span class="font-mono text-sky-300">[u v w]</span>, el esfuerzo aplicado <span class="font-mono">σ</span> y el cortante crítico <span class="font-mono">τ_CRSS</span>.
+              </p>
+            </div>
+
+            <!-- Structure Selector FCC vs BCC -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Estructura Cristalina</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="btn-struct-FCC" type="button" class="px-3 py-2.5 rounded-lg border text-sm font-semibold transition bg-sky-500/20 border-sky-400 text-sky-200">
+                  <div>FCC</div>
+                  <div class="text-[11px] font-mono opacity-80">{111}&lt;110&gt;</div>
+                </button>
+                <button id="btn-struct-BCC" type="button" class="px-3 py-2.5 rounded-lg border text-sm font-semibold transition bg-[#0F172A] border-[#1E293B] text-slate-400 hover:border-slate-600">
+                  <div>BCC</div>
+                  <div class="text-[11px] font-mono opacity-80">{110}&lt;111&gt;</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Preset Direction -->
+            <div class="space-y-2">
+              <label for="select-preset-dir" class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Dirección de Carga Preset
+              </label>
+              <select id="select-preset-dir" class="w-full rounded-lg px-3 py-2 text-xs sm:text-sm font-medium"></select>
+            </div>
+
+            <!-- Custom [u][v][w] inputs -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                <span>Dirección de Fuerza [u v w]</span>
+                <span id="dir-warning" class="text-[11px] text-rose-400 hidden">No puede ser [0 0 0]</span>
+              </label>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <span class="block text-[10px] font-mono text-slate-400 mb-1 text-center">u (Eje X)</span>
+                  <input id="input-u" type="number" step="1" min="-9" max="9" value="3" class="w-full rounded-lg px-2 py-2 text-center font-mono font-bold text-sky-300"/>
+                </div>
+                <div>
+                  <span class="block text-[10px] font-mono text-slate-400 mb-1 text-center">v (Eje Y)</span>
+                  <input id="input-v" type="number" step="1" min="-9" max="9" value="2" class="w-full rounded-lg px-2 py-2 text-center font-mono font-bold text-sky-300"/>
+                </div>
+                <div>
+                  <span class="block text-[10px] font-mono text-slate-400 mb-1 text-center">w (Eje Z)</span>
+                  <input id="input-w" type="number" step="1" min="-9" max="9" value="1" class="w-full rounded-lg px-2 py-2 text-center font-mono font-bold text-sky-300"/>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slider Sigma -->
+            <div class="space-y-2 pt-1">
+              <div class="flex items-center justify-between text-xs">
+                <label for="slider-sigma" class="font-semibold text-slate-300">
+                  <span class="mode-exp">Fuerza aplicada (σ)</span>
+                  <span class="mode-eng hidden">Esfuerzo axial aplicado (σ)</span>
+                </label>
+                <span class="font-mono font-bold text-sky-400 text-sm"><span id="val-sigma">80</span> MPa</span>
+              </div>
+              <input id="slider-sigma" type="range" min="0" max="150" step="1" value="80"/>
+              <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                <span>0 MPa</span><span>75 MPa</span><span>150 MPa</span>
+              </div>
+            </div>
+
+            <!-- Slider Tau CRSS -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <label for="slider-crss" class="font-semibold text-slate-300">
+                  <span class="mode-exp">Límite de resistencia del metal</span>
+                  <span class="mode-eng hidden">Cortante crítico (τ_CRSS)</span>
+                </label>
+                <span class="font-mono font-bold text-amber-400 text-sm"><span id="val-crss">25</span> MPa</span>
+              </div>
+              <input id="slider-crss" type="range" min="1" max="80" step="0.5" value="25" class="slider-amber"/>
+              <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                <span>1 MPa (puro)</span><span>25 MPa</span><span>80 MPa (aleado)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- EXPLORADOR PANEL: Traffic-light bar + Deck of Cards Analogy -->
+          <div class="mode-exp lab-card p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-[#F1F5F9]">Empuje actual vs. Límite del metal</h3>
+              <span id="slip-badge-exp" class="px-2.5 py-0.5 rounded-full text-xs font-bold"></span>
+            </div>
+
+            <!-- Semaphore Bar -->
+            <div class="space-y-2">
+              <div class="relative h-5 rounded-full bg-[#0F172A] border border-[#1E293B] overflow-hidden">
+                <div id="slip-bar-fill" class="h-full rounded-full transition-all duration-300" style="width: 50%;"></div>
+                <!-- Limit marker at 70% of track visually scaled -->
+                <div id="slip-bar-limit-marker" class="absolute top-0 bottom-0 w-0.5 bg-white/90 shadow-[0_0_8px_#fff]" style="left: 66%;"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400">
+                <span>Empuje cortante: <strong id="slip-exp-current" class="text-slate-100 font-mono">0</strong> MPa</span>
+                <span>Límite: <strong id="slip-exp-limit" class="text-amber-300 font-mono">25</strong> MPa</span>
+              </div>
+            </div>
+
+            <p id="slip-exp-verdict" class="text-xs text-slate-300 leading-relaxed lab-subcard p-3"></p>
+
+            <!-- Deck of Cards Analogy -->
+            <div class="lab-subcard p-3.5 space-y-2">
+              <div class="flex items-center gap-2 text-xs font-semibold text-amber-300">
+                <span>🃏</span>
+                <span>Analogía de la baraja de cartas inclinada</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <svg id="cards-analogy-svg" viewbox="0 0 120 72" class="w-28 h-16 shrink-0">
+                  <!-- Dynamic cards rendered by JS -->
+                </svg>
+                <p id="cards-analogy-text" class="text-[11px] text-slate-300 leading-relaxed">
+                  Imagina empujar un mazo de cartas: si las cartas están inclinadas a ~45°, resbalan fácilmente; si empujas de frente, se sostienen firmes.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- INGENIERO PANEL: Schmid Equations & KPIs -->
+          <div class="mode-eng hidden lab-card p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-sky-300 font-mono">LEY DE SCHMID — ANÁLISIS</h3>
+              <span id="slip-badge-eng" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold"></span>
+            </div>
+
+            <div class="lab-subcard p-3 font-mono text-xs space-y-1.5 text-slate-300">
+              <div class="text-sky-300 font-semibold">τ_R = σ · cos(φ) · cos(λ) = σ · m</div>
+              <div class="text-[11px] text-slate-400">Condición de fluencia: τ_R &gt; τ_CRSS</div>
+              <div class="pt-1 border-t border-[#1E293B] flex justify-between">
+                <span>Sistema más favorable:</span>
+                <span id="eng-active-sys" class="text-amber-300 font-bold">(111)[1-10]</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 font-mono">
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">cos(φ)</div>
+                <div id="eng-cosphi" class="text-base font-bold text-slate-100">0.0000</div>
+              </div>
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">cos(λ)</div>
+                <div id="eng-coslam" class="text-base font-bold text-slate-100">0.0000</div>
+              </div>
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">Factor Schmid (m_max)</div>
+                <div id="eng-mmax" class="text-base font-bold text-sky-400">0.0000</div>
+              </div>
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">τ_R máx (MPa)</div>
+                <div id="eng-taur" class="text-base font-bold text-amber-400">0.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 3D Cube + Engineering Table -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="lab-card p-4 sm:p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+              <div>
+                <h3 class="text-base font-bold text-[#F1F5F9]">Celda Unitaria 3D Interactiva</h3>
+                <p class="text-xs text-slate-400">Arrastra para rotar el cristal · Rueda para acercar · Cuando el empuje supera el límite, los planos atómicos se desplazan visualmente</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 text-[11px]">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>Átomos fijos</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>Plano / Desplazamiento</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>Fuerza [u v w]</span>
+              </div>
+            </div>
+            <div id="plot-crystal-3d" class="w-full h-[430px] sm:h-[490px] rounded-xl overflow-hidden border border-[#1E293B]"></div>
+          </div>
+
+          <!-- ENGINEER ONLY: Complete 12-system Table -->
+          <div class="mode-eng hidden lab-card p-5 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+              <h3 class="text-sm font-bold text-sky-300 font-mono">TABLA COMPLETA DE LOS 12 SISTEMAS DE DESLIZAMIENTO (<span id="table-struct-label">FCC</span>)</h3>
+              <span class="text-[11px] text-slate-400 font-mono">Ordenados de mayor a menor factor de Schmid (m)</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse font-mono">
+                <thead>
+                  <tr class="border-b border-[#1E293B] text-slate-400">
+                    <th class="py-2 px-2">#</th>
+                    <th class="py-2 px-2">Plano (hkl)</th>
+                    <th class="py-2 px-2">Dirección [uvw]</th>
+                    <th class="py-2 px-2 text-right">cos(φ)</th>
+                    <th class="py-2 px-2 text-right">cos(λ)</th>
+                    <th class="py-2 px-2 text-right">m</th>
+                    <th class="py-2 px-2 text-right">τ_R (MPa)</th>
+                    <th class="py-2 px-2 text-center">Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="schmid-table-body" class="divide-y divide-[#1E293B]/60">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: DIFFUSIOLAB ==================== -->
+    <section id="tab-diffusio" class="tab-panel hidden space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Controls Left -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="lab-card p-5 space-y-4">
+            <div>
+              <h2 class="text-lg font-bold text-[#F1F5F9] flex items-center gap-2">
+                <span class="text-emerald-400">◉</span> Horno de Difusión Atómica
+              </h2>
+              <p class="mode-exp text-xs text-slate-400 mt-1">
+                Ajusta el calor del horno y el tiempo para ver qué tan hondo penetran los átomos endurecedores.
+              </p>
+              <p class="mode-eng hidden text-xs text-slate-400 mt-1">
+                Resolución analítica de la Segunda Ley de Fick con coeficiente de Arrhenius <span class="font-mono text-emerald-300">D(T)</span> y función error validada con <span class="font-mono">DATA.tabla_erf</span>.
+              </p>
+            </div>
+
+            <!-- Mechanism Selector -->
+            <div class="space-y-1.5">
+              <label for="select-mechanism" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Mecanismo de Difusión</label>
+              <select id="select-mechanism" class="w-full rounded-lg px-3 py-2 text-xs sm:text-sm font-medium"></select>
+              <p id="mechanism-desc" class="text-[11px] text-slate-400 leading-relaxed pt-1"></p>
+            </div>
+
+            <!-- Temperature Slider -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <label for="slider-temp" class="font-semibold text-slate-300">Temperatura del horno (T)</label>
+                <span class="font-mono font-bold text-amber-400 text-sm"><span id="val-temp">925</span> °C</span>
+              </div>
+              <input id="slider-temp" type="range" min="850" max="1000" step="5" value="925" class="slider-amber"/>
+              <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                <span id="temp-min-lbl">850 °C</span><span id="temp-max-lbl">1000 °C</span>
+              </div>
+            </div>
+
+            <!-- Time Slider -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <label for="slider-time" class="font-semibold text-slate-300">Tiempo de horneado (t)</label>
+                <span class="font-mono font-bold text-sky-400 text-sm"><span id="val-time">6.0</span> h</span>
+              </div>
+              <input id="slider-time" type="range" min="0.5" max="24" step="0.5" value="6"/>
+              <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                <span>0.5 h</span><span>12 h</span><span>24 h</span>
+              </div>
+            </div>
+
+            <!-- Cs Slider -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <label for="slider-cs" class="font-semibold text-slate-300">
+                  <span class="mode-exp">Concentración en la superficie (Cs)</span>
+                  <span class="mode-eng hidden">Concentración superficial C_s (% peso)</span>
+                </label>
+                <span class="font-mono font-bold text-emerald-400 text-sm"><span id="val-cs">1.00</span>%</span>
+              </div>
+              <input id="slider-cs" type="range" min="0.2" max="2.0" step="0.05" value="1.0" class="slider-emerald"/>
+            </div>
+
+            <!-- C0 Slider -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <label for="slider-c0" class="font-semibold text-slate-300">
+                  <span class="mode-exp">Concentración inicial del centro (C₀)</span>
+                  <span class="mode-eng hidden">Concentración inicial C₀ (% peso)</span>
+                </label>
+                <span class="font-mono font-bold text-slate-300 text-sm"><span id="val-c0">0.15</span>%</span>
+              </div>
+              <input id="slider-c0" type="range" min="0.0" max="0.8" step="0.01" value="0.15"/>
+            </div>
+          </div>
+
+          <!-- EXPLORADOR READOUTS -->
+          <div class="mode-exp lab-card p-5 space-y-4">
+            <h3 class="text-sm font-bold text-[#F1F5F9]">Indicadores del Tratamiento</h3>
+
+            <!-- Velocidad Atómica -->
+            <div class="lab-subcard p-3.5 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400 font-medium">⚡ Velocidad atómica</span>
+                <span id="diff-exp-speed-label" class="font-bold text-amber-300">Agitación intensa</span>
+              </div>
+              <div class="h-2.5 rounded-full bg-[#0B1120] border border-[#1E293B] overflow-hidden">
+                <div id="diff-exp-speed-bar" class="h-full rounded-full bg-gradient-to-r from-sky-400 via-emerald-400 to-amber-400 transition-all duration-300" style="width: 65%;"></div>
+              </div>
+              <p id="diff-exp-speed-note" class="text-[11px] text-slate-400 leading-relaxed"></p>
+            </div>
+
+            <!-- Profundidad de coraza dura -->
+            <div class="lab-subcard p-3.5 space-y-1.5 border-l-4 border-l-emerald-400">
+              <div class="text-xs text-slate-400 font-medium">🛡️ Profundidad de coraza dura</div>
+              <div class="flex items-baseline gap-2">
+                <span id="diff-exp-depth" class="text-2xl font-extrabold text-emerald-400 font-mono">0.62</span>
+                <span class="text-sm font-semibold text-slate-300">mm</span>
+              </div>
+              <p id="diff-exp-depth-note" class="text-[11px] text-slate-300 leading-relaxed"></p>
+            </div>
+          </div>
+
+          <!-- INGENIERO READOUTS -->
+          <div class="mode-eng hidden lab-card p-5 space-y-3.5">
+            <h3 class="text-sm font-bold text-emerald-300 font-mono">ARRHENIUS &amp; 2ª LEY DE FICK</h3>
+            <div class="lab-subcard p-3 font-mono text-[11px] space-y-1.5 text-slate-300">
+              <div class="text-amber-300">D(T) = D₀ · exp(-Q_d / (R · T))</div>
+              <div class="text-sky-300">(C_s - C(x,t)) / (C_s - C₀) = erf( x / (2√(D·t)) )</div>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5 font-mono text-xs">
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">D₀ (m²/s)</div>
+                <div id="eng-d0" class="font-bold text-slate-100">2.30e-5</div>
+              </div>
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">Q_d (kJ/mol)</div>
+                <div id="eng-qd" class="font-bold text-slate-100">148.0</div>
+              </div>
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">D(T) (m²/s)</div>
+                <div id="eng-dt" class="font-bold text-amber-400">1.0e-11</div>
+              </div>
+              <div class="lab-subcard p-2.5">
+                <div class="text-[10px] text-slate-400">2√(D·t) (mm)</div>
+                <div id="eng-charlen" class="font-bold text-sky-400">0.00</div>
+              </div>
+            </div>
+            <div class="lab-subcard p-3 font-mono text-[11px] space-y-1">
+              <div class="flex justify-between">
+                <span class="text-slate-400">Capa efectiva (<span id="eng-target-c-lbl">0.40% C</span>):</span>
+                <span id="eng-eff-depth" class="text-emerald-400 font-bold">0.00 mm</span>
+              </div>
+              <div class="flex justify-between text-slate-400">
+                <span>Validación tabla_erf:</span>
+                <span id="eng-erf-check" class="text-sky-300">z = 0.00 → erf = 0.000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Visuals: 2D Canvas + Plotly Fick Chart -->
+        <div class="lg:col-span-8 space-y-4">
+          <!-- 2D Atomic Canvas -->
+          <div class="lab-card p-4 sm:p-5 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h3 class="text-base font-bold text-[#F1F5F9]">Simulación Microscópica en Vivo (Red Vibrando + Saltos Intersticiales)</h3>
+                <p class="text-xs text-slate-400">Izquierda: atmósfera rica en soluto (C_s) → Derecha: interior del metal (C₀). Mayor temperatura acelera la vibración y los saltos.</p>
+              </div>
+              <button id="btn-reset-canvas" type="button" class="px-3 py-1.5 rounded-lg bg-[#0F172A] hover:bg-slate-800 border border-[#334155] text-xs font-medium text-sky-300 shrink-0 transition">
+                ↺ Reiniciar átomos
+              </button>
+            </div>
+            <div class="relative rounded-xl overflow-hidden border border-[#1E293B] bg-[#070C17]">
+              <canvas id="diffusion-canvas" class="w-full h-[230px] block"></canvas>
+              <div class="absolute bottom-2 left-3 right-3 flex flex-wrap justify-between text-[10px] font-mono text-slate-400 pointer-events-none">
+                <span class="bg-[#0B1120]/80 px-2 py-0.5 rounded border border-emerald-500/30 text-emerald-300">Superficie x = 0 mm</span>
+                <span class="bg-[#0B1120]/80 px-2 py-0.5 rounded border border-slate-700 text-slate-300">● Átomos huésped (Fe) &nbsp; <span class="text-amber-400">● Átomos intersticiales</span></span>
+                <span class="bg-[#0B1120]/80 px-2 py-0.5 rounded border border-slate-700 text-slate-300">Interior x →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plotly C(x,t) Profile -->
+          <div class="lab-card p-4 sm:p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
+              <h3 class="text-base font-bold text-[#F1F5F9]">Perfil de Concentración C(x, t) vs. Profundidad</h3>
+              <span id="fick-chart-badge" class="text-xs font-mono text-emerald-400">Marca efectiva: 0.40% C</span>
+            </div>
+            <div id="plot-fick" class="w-full h-[320px] rounded-xl overflow-hidden border border-[#1E293B]"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: MINIJUEGOS INTERACTIVOS ==================== -->
+    <section id="tab-juegos" class="tab-panel hidden space-y-6">
+      <div class="lab-card p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-bold text-[#F1F5F9]">🎮 Laboratorio de Desafíos Interactivos</h2>
+          <p class="mode-exp text-xs sm:text-sm text-slate-400 mt-0.5">
+            Pon a prueba tu intuición atómica: orienta cristales para que sobrevivan a cargas extremas y domina el horno industrial para lograr la coraza exacta.
+          </p>
+          <p class="mode-eng hidden text-xs sm:text-sm text-slate-400 mt-0.5">
+            Aplica el factor de Schmid (<span class="font-mono text-sky-300">m = cos φ cos λ</span>) y el acoplamiento Arrhenius-Fick (<span class="font-mono text-emerald-300">x_eff ∝ √(D(T)·t)</span>) en retos cuantitativos con evaluación de precisión.
+          </p>
+        </div>
+        <div class="flex items-center gap-4 text-xs font-mono shrink-0">
+          <div class="lab-subcard px-3 py-2 text-center">
+            <div class="text-slate-400 text-[10px]">ESTRELLAS TOTALES</div>
+            <div id="games-total-stars" class="text-amber-400 text-base font-bold">0 / 6 ★</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- MINIJUEGO 1: MISIÓN ORIENTA EL CRISTAL -->
+        <div class="lab-card p-5 sm:p-6 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">MINIJUEGO 1</span>
+                <h3 class="text-lg font-bold text-[#F1F5F9] mt-1.5">Misión: Orienta el Cristal</h3>
+              </div>
+              <div id="g1-best-stars" class="text-lg tracking-wider text-slate-600">★★★</div>
+            </div>
+
+            <!-- Mission Choice -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">1. Selecciona tu misión</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <button type="button" data-mission="turbine" class="g1-mission-btn text-left p-3 rounded-xl border border-sky-400 bg-sky-500/15 transition">
+                  <div class="text-sm font-bold text-[#F1F5F9]">✈️ Álade de Turbina</div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">Carga: <span class="font-mono text-sky-300">95 MPa</span> · Red FCC</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Límite del metal: <span class="font-mono">40 MPa</span></div>
+                </button>
+                <button type="button" data-mission="implant" class="g1-mission-btn text-left p-3 rounded-xl border border-[#1E293B] bg-[#0F172A] hover:border-slate-600 transition">
+                  <div class="text-sm font-bold text-[#F1F5F9]">🦴 Implante Óseo</div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">Carga: <span class="font-mono text-emerald-300">110 MPa</span> · Red BCC</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Límite del metal: <span class="font-mono">46 MPa</span></div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Orientation Choice -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Elige la orientación cristalográfica</label>
+              <div class="grid grid-cols-4 gap-2">
+                <button type="button" data-ori="1,0,0" class="g1-ori-btn py-2.5 rounded-lg border border-sky-400 bg-sky-500/20 font-mono font-bold text-sm text-sky-200 transition">[100]</button>
+                <button type="button" data-ori="1,1,0" class="g1-ori-btn py-2.5 rounded-lg border border-[#1E293B] bg-[#0F172A] font-mono font-bold text-sm text-slate-300 hover:border-slate-500 transition">[110]</button>
+                <button type="button" data-ori="1,1,1" class="g1-ori-btn py-2.5 rounded-lg border border-[#1E293B] bg-[#0F172A] font-mono font-bold text-sm text-slate-300 hover:border-slate-500 transition">[111]</button>
+                <button type="button" data-ori="3,2,1" class="g1-ori-btn py-2.5 rounded-lg border border-[#1E293B] bg-[#0F172A] font-mono font-bold text-sm text-slate-300 hover:border-slate-500 transition">[321]</button>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button id="btn-g1-run" type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-400 hover:to-cyan-300 text-[#0B1120] font-extrabold text-sm tracking-wide shadow-lg shadow-sky-500/20 transition active:scale-[0.99]">
+              ⚡ Aplicar Carga Real
+            </button>
+
+            <!-- Animated Result Panel -->
+            <div class="lab-subcard p-4 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400 font-medium">Ensayo de tracción uniaxial</span>
+                <span id="g1-status-tag" class="font-mono font-bold text-slate-400">Esperando prueba...</span>
+              </div>
+              <div class="relative h-6 rounded-full bg-[#0B1120] border border-[#1E293B] overflow-hidden">
+                <div id="g1-bar" class="h-full rounded-full bg-sky-400 transition-all duration-700 ease-out" style="width: 0%;"></div>
+                <div id="g1-limit-line" class="absolute top-0 bottom-0 w-0.5 bg-amber-300 shadow-[0_0_8px_#F59E0B]" style="left: 72%;"></div>
+              </div>
+              <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                <span>Empuje cortante: <strong id="g1-tau-val" class="text-slate-200">—</strong></span>
+                <span>Límite: <strong id="g1-crss-val" class="text-amber-300">40.0 MPa</strong></span>
+              </div>
+              <div id="g1-feedback" class="hidden pt-2 border-t border-[#1E293B] space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span id="g1-verdict-title" class="font-bold text-sm"></span>
+                  <span id="g1-stars-result" class="text-lg tracking-wider"></span>
+                </div>
+                <p id="g1-verdict-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINIJUEGO 2: MAESTRO DEL HORNO -->
+        <div class="lab-card p-5 sm:p-6 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">MINIJUEGO 2</span>
+                <h3 class="text-lg font-bold text-[#F1F5F9] mt-1.5">Maestro del Horno</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <div id="g2-best-stars" class="text-lg tracking-wider text-slate-600">★★★</div>
+                <button id="btn-g2-new" type="button" class="px-2.5 py-1 rounded-lg bg-[#0F172A] hover:bg-slate-800 border border-[#334155] text-[11px] font-semibold text-amber-300 transition">
+                  🎲 Nuevo Encargo
+                </button>
+              </div>
+            </div>
+
+            <!-- Order Card -->
+            <div class="lab-subcard p-4 border-l-4 border-l-amber-400 space-y-1.5">
+              <div class="text-[11px] uppercase tracking-wider font-semibold text-amber-300">📋 Orden de Producción (Acero Fe-γ · C₀=0.15%, Cs=1.00%)</div>
+              <div class="text-sm sm:text-base font-bold text-[#F1F5F9]">
+                Objetivo de coraza (0.40% C): <span id="g2-target-text" class="font-mono text-emerald-400">0.65 mm ± 0.08 mm</span>
+              </div>
+              <div class="text-xs text-slate-400">
+                Tiempo máximo permitido en horno: <strong id="g2-maxtime-text" class="font-mono text-sky-300">8.0 h</strong>
+              </div>
+            </div>
+
+            <!-- Furnace Sliders -->
+            <div class="space-y-3.5">
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <label for="g2-slider-t" class="font-semibold text-slate-300">Temperatura del horno (T)</label>
+                  <span class="font-mono font-bold text-amber-400 text-sm"><span id="g2-val-temp">910</span> °C</span>
+                </div>
+                <input id="g2-slider-t" type="range" min="850" max="1000" step="5" value="910" class="slider-amber"/>
+                <div class="flex justify-between text-[10px] font-mono text-slate-500"><span>850 °C</span><span>925 °C</span><span>1000 °C</span></div>
+              </div>
+
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <label for="g2-slider-time" class="font-semibold text-slate-300">Tiempo de horneado (t)</label>
+                  <span class="font-mono font-bold text-sky-400 text-sm"><span id="g2-val-time">5.0</span> h</span>
+                </div>
+                <input id="g2-slider-time" type="range" min="1" max="12" step="0.5" value="5"/>
+                <div class="flex justify-between text-[10px] font-mono text-slate-500"><span>1.0 h</span><span>6.5 h</span><span>12.0 h</span></div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button id="btn-g2-bake" type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 hover:to-orange-300 text-[#0B1120] font-extrabold text-sm tracking-wide shadow-lg shadow-amber-500/20 transition active:scale-[0.99]">
+              🔥 ¡Hornear Pieza!
+            </button>
+
+            <!-- Visual Gauge Result -->
+            <div class="lab-subcard p-4 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400 font-medium">Medidor de precisión de capa</span>
+                <span id="g2-depth-readout" class="font-mono font-bold text-slate-400">Sin hornear</span>
+              </div>
+
+              <!-- Target Zone Gauge (0 to 1.4 mm) -->
+              <div class="relative h-7 rounded-full bg-[#0B1120] border border-[#1E293B] overflow-hidden">
+                <!-- Green acceptable band -->
+                <div id="g2-target-band" class="absolute top-0 bottom-0 bg-emerald-500/25 border-x border-emerald-400/70" style="left: 40%; width: 12%;"></div>
+                <!-- Exact center tick -->
+                <div id="g2-target-center" class="absolute top-0 bottom-0 w-0.5 bg-emerald-300" style="left: 46%;"></div>
+                <!-- Achieved pointer -->
+                <div id="g2-result-marker" class="absolute top-1 bottom-1 w-3 -ml-1.5 rounded-full bg-amber-400 shadow-[0_0_10px_#F59E0B] transition-all duration-700 ease-out opacity-0" style="left: 0%;"></div>
+              </div>
+              <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                <span>0.0 mm</span><span>0.70 mm</span><span>1.40 mm</span>
+              </div>
+
+              <div id="g2-feedback" class="hidden pt-2 border-t border-[#1E293B] space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span id="g2-verdict-title" class="font-bold text-sm"></span>
+                  <span id="g2-stars-result" class="text-lg tracking-wider"></span>
+                </div>
+                <p id="g2-verdict-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-[#1E293B] bg-[#0B1120]/80 py-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+      <div>
+        <strong class="text-slate-200">AtomForge</strong> — Laboratorio Interactivo de Cristalografía y Difusión Atómica
+      </div>
+      <div id="footer-authors" class="font-medium text-slate-300">
+        Desarrollado por Basurto Valdivieso Erick y Coronel Reveles Guadalupe
+      </div>
+    </div>
+  </footer>
+
+  <!-- METHODOLOGY MODAL -->
+  <div id="modal-methodology" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="lab-card max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl border-sky-500/30 space-y-4">
+      <div class="flex items-start justify-between gap-4 border-b border-[#1E293B] pb-3">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-wider text-sky-400">Documentación Científica</span>
+          <h3 id="modal-meth-title" class="text-lg sm:text-xl font-bold text-[#F1F5F9] mt-0.5">Fundamentos y Metodología</h3>
+        </div>
+        <button id="btn-close-methodology" type="button" class="w-8 h-8 rounded-lg bg-[#0F172A] hover:bg-slate-800 border border-[#1E293B] text-slate-300 flex items-center justify-center text-lg leading-none">
+          ×
+        </button>
+      </div>
+      <p id="modal-meth-summary" class="text-sm text-slate-300 leading-relaxed"></p>
+      <div id="modal-meth-steps" class="space-y-3"></div>
+      <div class="pt-3 border-t border-[#1E293B] flex justify-end">
+        <button id="btn-close-methodology-bottom" type="button" class="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-[#0B1120] font-semibold text-xs sm:text-sm transition">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION SCRIPT -->
+  <script>
+    const DATA = {
+  "autores": [
+    "Basurto Valdivieso Erick",
+    "Coronel Reveles Guadalupe"
+  ],
+  "constante_R": 8.314,
+  "metales_base": [
+    {
+      "simbolo": "Cu",
+      "nombre": "Cobre puro (monocristal)",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.3615,
+      "fea": 0.74,
+      "tau_crss_mpa": 0.7,
+      "uso": "Conductores eléctricos y estudio clásico de deslizamiento {111}<110>"
+    },
+    {
+      "simbolo": "Al",
+      "nombre": "Aluminio puro (monocristal)",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.4049,
+      "fea": 0.74,
+      "tau_crss_mpa": 0.78,
+      "uso": "Estructuras aeroespaciales ligeras y ductilidad criogénica"
+    },
+    {
+      "simbolo": "Ni",
+      "nombre": "Níquel / Superaleación base Ni",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.3524,
+      "fea": 0.74,
+      "tau_crss_mpa": 3.2,
+      "uso": "Álabes monocristalinos orientados en [001] para turbinas de avión"
+    },
+    {
+      "simbolo": "Fe-α",
+      "nombre": "Hierro Ferrítico (a temperatura ambiente)",
+      "estructura": "BCC",
+      "parametro_red_nm": 0.2866,
+      "fea": 0.68,
+      "tau_crss_mpa": 27.5,
+      "uso": "Matriz base de aceros al carbono; presenta transición dúctil-frágil"
+    },
+    {
+      "simbolo": "Fe-γ",
+      "nombre": "Hierro Austenítico (> 912 °C)",
+      "estructura": "FCC",
+      "parametro_red_nm": 0.3589,
+      "fea": 0.74,
+      "tau_crss_mpa": 12.0,
+      "uso": "Fase huésped para tratamientos de cementación y temple de aceros"
+    }
+  ],
+  "sistemas_cristalinos": {
+    "FCC": [
+      {
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          -1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          0,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          0,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          0,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          -1,
+          0
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          0,
+          1,
+          1
+        ]
+      }
+    ],
+    "BCC": [
+      {
+        "plano": [
+          1,
+          1,
+          0
+        ],
+        "direccion": [
+          -1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          1,
+          0
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          0
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          -1,
+          0
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          1
+        ],
+        "direccion": [
+          -1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          -1
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          1,
+          0,
+          -1
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "plano": [
+          0,
+          1,
+          -1
+        ],
+        "direccion": [
+          -1,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  "direcciones_preset": [
+    {
+      "etiqueta": "[1 0 0] — Eje cúbico (orientación de álabes monocristalinos)",
+      "uvw": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "etiqueta": "[1 1 0] — Diagonal de cara",
+      "uvw": [
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "etiqueta": "[1 1 1] — Diagonal principal del cubo",
+      "uvw": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "etiqueta": "[3 2 1] — Dirección asimétrica (alta actividad de deslizamiento)",
+      "uvw": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "etiqueta": "[2 2 3] — Dirección oblicua de alto índice",
+      "uvw": [
+        2,
+        2,
+        3
+      ]
+    }
+  ],
+  "ejemplos_schmid": {
+    "FCC_321": [
+      {
+        "id": 11,
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ],
+        "cos_phi": 0.6172,
+        "cos_lambda": 0.7559,
+        "m": 0.4666
+      },
+      {
+        "id": 2,
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ],
+        "cos_phi": 0.9258,
+        "cos_lambda": 0.378,
+        "m": 0.3499
+      },
+      {
+        "id": 12,
+        "plano": [
+          1,
+          1,
+          -1
+        ],
+        "direccion": [
+          0,
+          1,
+          1
+        ],
+        "cos_phi": 0.6172,
+        "cos_lambda": 0.5669,
+        "m": 0.3499
+      },
+      {
+        "id": 8,
+        "plano": [
+          1,
+          -1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ],
+        "cos_phi": 0.3086,
+        "cos_lambda": 0.9449,
+        "m": 0.2916
+      }
+    ],
+    "BCC_321": [
+      {
+        "id": 6,
+        "plano": [
+          1,
+          0,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ],
+        "cos_phi": 0.7559,
+        "cos_lambda": 0.6172,
+        "m": 0.4666
+      },
+      {
+        "id": 7,
+        "plano": [
+          1,
+          0,
+          -1
+        ],
+        "direccion": [
+          1,
+          1,
+          1
+        ],
+        "cos_phi": 0.378,
+        "cos_lambda": 0.9258,
+        "m": 0.3499
+      },
+      {
+        "id": 10,
+        "plano": [
+          0,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          -1
+        ],
+        "cos_phi": 0.5669,
+        "cos_lambda": 0.6172,
+        "m": 0.3499
+      },
+      {
+        "id": 2,
+        "plano": [
+          1,
+          1,
+          0
+        ],
+        "direccion": [
+          1,
+          -1,
+          1
+        ],
+        "cos_phi": 0.9449,
+        "cos_lambda": 0.3086,
+        "m": 0.2916
+      }
+    ],
+    "FCC_100": [
+      {
+        "id": 1,
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          -1,
+          0
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      },
+      {
+        "id": 2,
+        "plano": [
+          1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          -1
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      },
+      {
+        "id": 5,
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          1,
+          0
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      },
+      {
+        "id": 6,
+        "plano": [
+          -1,
+          1,
+          1
+        ],
+        "direccion": [
+          1,
+          0,
+          1
+        ],
+        "cos_phi": 0.5774,
+        "cos_lambda": 0.7071,
+        "m": 0.4082
+      }
+    ]
+  },
+  "mecanismos_difusion": [
+    {
+      "id": "C_en_Fe_gamma",
+      "nombre": "Carbono intersticial en Fe-γ (Austenita FCC)",
+      "descripcion": "Proceso industrial estándar de cementación (850–980 °C). Aunque la red FCC es más compacta (FEA=0.74), disuelve hasta 2.14% C y evita crecimiento excesivo de grano.",
+      "D0": 2.3e-05,
+      "Qd": 148000.0,
+      "T_min_c": 850,
+      "T_max_c": 1000,
+      "T_default_c": 925,
+      "C0_default": 0.15,
+      "Cs_default": 1.0
+    },
+    {
+      "id": "C_en_Fe_alpha",
+      "nombre": "Carbono intersticial en Fe-α (Ferrita BCC)",
+      "descripcion": "Difusión en red BCC más abierta (FEA=0.68): requiere menor energía de activación (80 kJ/mol), por lo que el carbono salta mucho más rápido, pero su solubilidad máxima es muy baja (0.022% C).",
+      "D0": 6.2e-07,
+      "Qd": 80000.0,
+      "T_min_c": 500,
+      "T_max_c": 720,
+      "T_default_c": 650,
+      "C0_default": 0.005,
+      "Cs_default": 0.022
+    },
+    {
+      "id": "N_en_Fe_alpha",
+      "nombre": "Nitruración en Fe-α (Nitrógeno en Ferrita BCC)",
+      "descripcion": "Endurecimiento superficial a baja temperatura (500–580 °C) sin necesidad de temple posterior, evitando distorsiones geométricas en engranes de precisión.",
+      "D0": 3e-07,
+      "Qd": 76150.0,
+      "T_min_c": 480,
+      "T_max_c": 580,
+      "T_default_c": 530,
+      "C0_default": 0.01,
+      "Cs_default": 0.6
+    }
+  ],
+  "tabla_erf": [
+    {
+      "z": 0.0,
+      "erf": 0.0
+    },
+    {
+      "z": 0.05,
+      "erf": 0.056372
+    },
+    {
+      "z": 0.1,
+      "erf": 0.112463
+    },
+    {
+      "z": 0.15,
+      "erf": 0.167996
+    },
+    {
+      "z": 0.2,
+      "erf": 0.222703
+    },
+    {
+      "z": 0.25,
+      "erf": 0.276326
+    },
+    {
+      "z": 0.3,
+      "erf": 0.328627
+    },
+    {
+      "z": 0.35,
+      "erf": 0.379382
+    },
+    {
+      "z": 0.4,
+      "erf": 0.428392
+    },
+    {
+      "z": 0.45,
+      "erf": 0.475482
+    },
+    {
+      "z": 0.5,
+      "erf": 0.5205
+    },
+    {
+      "z": 0.55,
+      "erf": 0.563323
+    },
+    {
+      "z": 0.6,
+      "erf": 0.603856
+    },
+    {
+      "z": 0.65,
+      "erf": 0.642029
+    },
+    {
+      "z": 0.7,
+      "erf": 0.677801
+    },
+    {
+      "z": 0.75,
+      "erf": 0.711156
+    },
+    {
+      "z": 0.8,
+      "erf": 0.742101
+    },
+    {
+      "z": 0.85,
+      "erf": 0.770668
+    },
+    {
+      "z": 0.9,
+      "erf": 0.796908
+    },
+    {
+      "z": 0.95,
+      "erf": 0.820891
+    },
+    {
+      "z": 1.0,
+      "erf": 0.842701
+    },
+    {
+      "z": 1.05,
+      "erf": 0.862436
+    },
+    {
+      "z": 1.1,
+      "erf": 0.880205
+    },
+    {
+      "z": 1.15,
+      "erf": 0.896124
+    },
+    {
+      "z": 1.2,
+      "erf": 0.910314
+    },
+    {
+      "z": 1.25,
+      "erf": 0.9229
+    },
+    {
+      "z": 1.3,
+      "erf": 0.934008
+    },
+    {
+      "z": 1.35,
+      "erf": 0.943762
+    },
+    {
+      "z": 1.4,
+      "erf": 0.952285
+    },
+    {
+      "z": 1.45,
+      "erf": 0.959695
+    },
+    {
+      "z": 1.5,
+      "erf": 0.966105
+    },
+    {
+      "z": 1.55,
+      "erf": 0.971623
+    },
+    {
+      "z": 1.6,
+      "erf": 0.976348
+    },
+    {
+      "z": 1.65,
+      "erf": 0.980376
+    },
+    {
+      "z": 1.7,
+      "erf": 0.98379
+    },
+    {
+      "z": 1.75,
+      "erf": 0.986672
+    },
+    {
+      "z": 1.8,
+      "erf": 0.989091
+    },
+    {
+      "z": 1.85,
+      "erf": 0.991111
+    },
+    {
+      "z": 1.9,
+      "erf": 0.99279
+    },
+    {
+      "z": 1.95,
+      "erf": 0.994179
+    },
+    {
+      "z": 2.0,
+      "erf": 0.995322
+    },
+    {
+      "z": 2.05,
+      "erf": 0.996258
+    },
+    {
+      "z": 2.1,
+      "erf": 0.997021
+    },
+    {
+      "z": 2.15,
+      "erf": 0.997639
+    },
+    {
+      "z": 2.2,
+      "erf": 0.998137
+    },
+    {
+      "z": 2.25,
+      "erf": 0.998537
+    },
+    {
+      "z": 2.3,
+      "erf": 0.998857
+    },
+    {
+      "z": 2.35,
+      "erf": 0.999111
+    },
+    {
+      "z": 2.4,
+      "erf": 0.999311
+    },
+    {
+      "z": 2.45,
+      "erf": 0.999469
+    },
+    {
+      "z": 2.5,
+      "erf": 0.999593
+    },
+    {
+      "z": 2.55,
+      "erf": 0.999689
+    },
+    {
+      "z": 2.6,
+      "erf": 0.999764
+    },
+    {
+      "z": 2.65,
+      "erf": 0.999822
+    },
+    {
+      "z": 2.7,
+      "erf": 0.999866
+    },
+    {
+      "z": 2.75,
+      "erf": 0.999899
+    },
+    {
+      "z": 2.8,
+      "erf": 0.999925
+    },
+    {
+      "z": 2.85,
+      "erf": 0.999944
+    },
+    {
+      "z": 2.9,
+      "erf": 0.999959
+    },
+    {
+      "z": 2.95,
+      "erf": 0.99997
+    },
+    {
+      "z": 3.0,
+      "erf": 0.999978
+    }
+  ],
+  "retos_clase": [
+    {
+      "id": "reto_cristal",
+      "titulo": "Reto 1: Monocristal bajo Tensión Uniaxial",
+      "pregunta": "Se aplica un esfuerzo axial de σ = 80 MPa en la dirección [3 2 1] a un monocristal con esfuerzo cortante crítico τ_CRSS = 25 MPa. Si el cristal es FCC ({111}<110>), ¿ocurre deslizamiento plástico? ¿Y si es BCC ({110}<111>)?",
+      "pista": "Compara τ_R = σ · cos(φ) · cos(λ) del sistema más favorable contra τ_CRSS = 25 MPa.",
+      "respuesta_corta": "En FCC SÍ desliza (τ_R = 27.99 MPa > 25 MPa en el sistema (111)[10-1], con m = 0.3499). En BCC NO desliza todavía (τ_R máximo = 23.33 MPa < 25 MPa en (110)[-11-1], con m = 0.2916)."
+    },
+    {
+      "id": "reto_difusion",
+      "titulo": "Reto 2: Ingeniería de Cementación en Engranes",
+      "pregunta": "Un engrane de acero SAE 1015 (C₀ = 0.15%) entra a un horno de cementación con atmósfera Cs = 1.00% C durante t = 6 horas. Si queremos que a una profundidad de x = 0.60 mm alcance al menos Cx = 0.40% C para poder templarlo, ¿basta con hornear a 880 °C o necesitamos subir a 930 °C?",
+      "pista": "Usa DiffusioLab (Pestaña 3) con C₀ = 0.15%, Cs = 1.00%, t = 6 h y prueba ambas temperaturas.",
+      "respuesta_corta": "A 880 °C la capa efectiva (0.40% C) apenas llega a ~0.46 mm (insuficiente). Subiendo a 930 °C el coeficiente D se duplica por Arrhenius y la capa alcanza ~0.64 mm, cumpliendo el diseño."
+    }
+  ],
+  "metodologia": {
+    "titulo": "Fundamentos Físicos y Metodología de Cálculo",
+    "resumen": "AtomForge modela dos fenómenos gobernados por defectos cristalinos (Unidades 3 y 4): el deslizamiento de dislocaciones mediante la Ley de Schmid y la difusión atómica asistida térmicamente mediante Arrhenius y la Segunda Ley de Fick.",
+    "pasos": [
+      {
+        "paso": "1. Generación de Familias Cristalográficas",
+        "descripcion": "A partir de los índices de Miller se construyeron computacionalmente los 12 sistemas compactos de deslizamiento para redes FCC ({111}<110>) y los 12 sistemas primarios para BCC ({110}<111>), verificando ortogonalidad n · s = 0."
+      },
+      {
+        "paso": "2. Ley de Schmid y Esfuerzo Cortante Resuelto",
+        "descripcion": "Para cualquier eje de carga [u v w], se calculan los cosenos directores cos(φ) respecto a la normal del plano y cos(λ) respecto a la dirección de deslizamiento. El sistema activo es el que maximiza m = cos(φ)cos(λ) y supera τ_CRSS."
+      },
+      {
+        "paso": "3. Coeficiente de Difusión por Arrhenius",
+        "descripcion": "La movilidad atómica por vacancias e intersticios se calcula con D(T) = D₀ · exp(-Qd / (R · T)), usando constantes experimentales de carbono y nitrógeno en hierro FCC y BCC (R = 8.314 J/mol·K)."
+      },
+      {
+        "paso": "4. Perfil de Concentración (Segunda Ley de Fick)",
+        "descripcion": "Bajo condición de fuente superficial constante Cs en un sólido semi-infinito, la concentración a profundidad x y tiempo t se resuelve exactamente mediante (Cs - C(x,t))/(Cs - C₀) = erf(x / (2√(D·t)))."
+      }
+    ]
+  }
+};
+
+    // ===================== GLOBAL STATE =====================
+    const state = {
+      mode: 'explorador', // 'explorador' | 'ingeniero'
+      activeTab: 'tab-mapa',
+      crystal: {
+        structure: 'FCC',
+        uvw: [3, 2, 1],
+        sigma: 80,
+        crss: 25
+      },
+      diffusion: {
+        mechIndex: 0,
+        T_c: 925,
+        time_h: 6.0,
+        Cs: 1.0,
+        C0: 0.15
+      },
+      games: {
+        g1Mission: 'turbine',
+        g1Ori: [1, 0, 0],
+        g1Best: 0,
+        g2Order: { target: 0.65, tol: 0.08, maxTime: 8.0 },
+        g2Best: 0
+      }
+    };
+
+    const PLOTLY_CONFIG = { displayModeBar: false, responsive: true };
+
+    // ===================== MATH HELPERS =====================
+    function vecNorm(v) {
+      return Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+    }
+    function vecDot(a, b) {
+      return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+    }
+    function vecCross(a, b) {
+      return [
+        a[1]*b[2] - a[2]*b[1],
+        a[2]*b[0] - a[0]*b[2],
+        a[0]*b[1] - a[1]*b[0]
+      ];
+    }
+    function fmtIdx(arr, brackets) {
+      const s = arr.map(n => n < 0 ? `${n}` : `${n}`).join(' ');
+      return brackets === '()' ? `(${s})` : `[${s}]`;
+    }
+
+    // Compute Schmid factors for all 12 systems in DATA.sistemas_cristalinos[struct]
+    function computeSchmid(struct, uvw, sigma, crss) {
+      const systems = DATA.sistemas_cristalinos[struct] || [];
+      const fNorm = vecNorm(uvw);
+      if (fNorm < 1e-9) return [];
+
+      const rows = systems.map((sys, idx) => {
+        const n = sys.plano;
+        const s = sys.direccion;
+        const cosPhi = Math.abs(vecDot(n, uvw)) / (vecNorm(n) * fNorm);
+        const cosLam = Math.abs(vecDot(s, uvw)) / (vecNorm(s) * fNorm);
+        const m = cosPhi * cosLam;
+        const tauR = sigma * m;
+        return {
+          id: idx + 1,
+          plano: n,
+          direccion: s,
+          cosPhi,
+          cosLam,
+          m,
+          tauR,
+          active: tauR > crss
+        };
+      });
+      rows.sort((a, b) => b.m - a.m);
+      return rows;
+    }
+
+    // Interpolated erf(z) strictly validated with DATA.tabla_erf
+    function erfFromTable(z) {
+      const tbl = DATA.tabla_erf;
+      if (z <= 0) return 0;
+      const last = tbl[tbl.length - 1];
+      if (z >= last.z) return 1.0;
+      for (let i = 0; i < tbl.length - 1; i++) {
+        const a = tbl[i], b = tbl[i + 1];
+        if (z >= a.z && z <= b.z) {
+          const frac = (z - a.z) / (b.z - a.z);
+          return a.erf + frac * (b.erf - a.erf);
+        }
+      }
+      return 1.0;
+    }
+
+    // Inverse erf(y) using DATA.tabla_erf
+    function erfInvFromTable(y) {
+      const tbl = DATA.tabla_erf;
+      if (y <= 0) return 0;
+      const last = tbl[tbl.length - 1];
+      if (y >= last.erf) return last.z;
+      for (let i = 0; i < tbl.length - 1; i++) {
+        const a = tbl[i], b = tbl[i + 1];
+        if (y >= a.erf && y <= b.erf) {
+          const frac = (y - a.erf) / (b.erf - a.erf);
+          return a.z + frac * (b.z - a.z);
+        }
+      }
+      return last.z;
+    }
+
+    function computeDiffusionD(mech, T_c) {
+      const R = DATA.constante_R || 8.314;
+      const T_k = T_c + 273.15;
+      return mech.D0 * Math.exp(-mech.Qd / (R * T_k));
+    }
+
+    function computeCaseDepthMM(mech, T_c, time_h, Cs, C0, targetC = 0.40) {
+      const D = computeDiffusionD(mech, T_c);
+      const t_s = time_h * 3600;
+      const denom_m = 2 * Math.sqrt(D * t_s); // meters
+      if (Cs <= C0 + 1e-6) return { depthMM: 0, z: 0, erfVal: 0, D, charLenMM: denom_m * 1000, validTarget: false };
+      let effectiveTarget = targetC;
+      let validTarget = true;
+      if (targetC >= Cs || targetC <= C0) {
+        effectiveTarget = (Cs + C0) / 2;
+        validTarget = false;
+      }
+      const rhs = (Cs - effectiveTarget) / (Cs - C0);
+      const z = erfInvFromTable(rhs);
+      const depthMM = z * denom_m * 1000;
+      return { depthMM, z, erfVal: rhs, D, charLenMM: denom_m * 1000, validTarget, effectiveTarget };
+    }
+
+    // ===================== GLOBAL MODE SWITCHING =====================
+    function applyMode(newMode) {
+      state.mode = newMode;
+      const isExp = newMode === 'explorador';
+
+      document.querySelectorAll('.mode-exp').forEach(el => el.classList.toggle('hidden', !isExp));
+      document.querySelectorAll('.mode-eng').forEach(el => el.classList.toggle('hidden', isExp));
+
+      const btnExp = document.getElementById('btn-mode-explorador');
+      const btnEng = document.getElementById('btn-mode-ingeniero');
+      const banner = document.getElementById('mode-banner');
+      const bannerTxt = document.getElementById('mode-banner-text');
+
+      if (isExp) {
+        btnExp.className = 'px-3.5 py-1.5 rounded-full text-xs sm:text-sm transition-all mode-pill-active-exp flex items-center gap-1.5';
+        btnEng.className = 'px-3.5 py-1.5 rounded-full text-xs sm:text-sm transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5';
+        banner.className = 'mt-2.5 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-200 flex items-center justify-between gap-2';
+        bannerTxt.innerHTML = '<strong>Modo Explorador activo:</strong> Lenguaje cotidiano, analogía de la baraja de cartas e indicadores visuales sin fórmulas técnicas.';
+      } else {
+        btnEng.className = 'px-3.5 py-1.5 rounded-full text-xs sm:text-sm transition-all mode-pill-active-eng flex items-center gap-1.5';
+        btnExp.className = 'px-3.5 py-1.5 rounded-full text-xs sm:text-sm transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5';
+        banner.className = 'mt-2.5 px-3.5 py-1.5 rounded-lg bg-sky-500/10 border border-sky-500/25 text-xs text-sky-200 flex items-center justify-between gap-2';
+        bannerTxt.innerHTML = '<strong>Modo Ingeniero activo:</strong> Ecuaciones de Schmid, tabla de los 12 sistemas cristalinos, constantes D₀/Q_d y solución analítica de Fick.';
+      }
+
+      renderMetalesCards();
+      updateCrystalTab();
+      updateDiffusioTab();
+    }
+
+    // ===================== TAB NAVIGATION =====================
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      const target = document.getElementById(tabId);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tabId);
+      });
+
+      if (tabId === 'tab-crystal') {
+        setTimeout(() => {
+          updateCrystalTab();
+          Plotly.Plots.resize('plot-crystal-3d');
+        }, 40);
+      } else if (tabId === 'tab-diffusio') {
+        setTimeout(() => {
+          resizeDiffusionCanvas();
+          updateDiffusioTab();
+          Plotly.Plots.resize('plot-fick');
+        }, 40);
+      }
+    }
+
+    // ===================== TAB 1: MAPA ATÓMICO =====================
+    function renderMetalesCards() {
+      const grid = document.getElementById('metales-grid');
+      grid.innerHTML = '';
+      const isExp = state.mode === 'explorador';
+
+      (DATA.metales_base || []).forEach(m => {
+        const isFCC = m.estructura === 'FCC';
+        const badgeCls = isFCC
+          ? 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+          : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'lab-card p-4 text-left hover:border-sky-400/60 hover:-translate-y-0.5 transition flex flex-col justify-between gap-3 group';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xl font-extrabold font-mono text-[#F1F5F9] group-hover:text-sky-400 transition">${m.simbolo}</span>
+              <span class="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border ${badgeCls}">${m.estructura}</span>
+            </div>
+            <div class="text-xs font-semibold text-slate-200 mb-1.5">${m.nombre}</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">${m.uso}</p>
+          </div>
+          <div class="pt-2.5 border-t border-[#1E293B] text-[11px]">
+            ${isExp ? `
+              <div class="flex justify-between text-slate-300">
+                <span class="text-slate-400">Empaquetamiento:</span>
+                <span class="font-semibold ${isFCC ? 'text-sky-300' : 'text-amber-300'}">${isFCC ? 'Muy compacto (74%)' : 'Más abierto (68%)'}</span>
+              </div>
+              <div class="flex justify-between text-slate-300 mt-1">
+                <span class="text-slate-400">Resistencia base:</span>
+                <span class="font-semibold text-emerald-300">${m.tau_crss_mpa < 5 ? 'Muy dúctil' : m.tau_crss_mpa < 15 ? 'Media' : 'Alta'}</span>
+              </div>
+            ` : `
+              <div class="grid grid-cols-3 gap-1 font-mono text-[10px]">
+                <div><span class="text-slate-500 block">a (nm)</span><span class="text-slate-200">${m.parametro_red_nm}</span></div>
+                <div><span class="text-slate-500 block">FEA</span><span class="text-sky-300">${m.fea}</span></div>
+                <div><span class="text-slate-500 block">τ_CRSS</span><span class="text-amber-300">${m.tau_crss_mpa}</span></div>
+              </div>
+            `}
+          </div>
+        `;
+        card.addEventListener('click', () => {
+          state.crystal.structure = m.estructura;
+          state.crystal.crss = Math.max(1, Math.min(80, m.tau_crss_mpa));
+          state.crystal.sigma = Math.min(150, Math.max(10, Math.round(m.tau_crss_mpa * 3)));
+          syncCrystalInputs();
+          switchTab('tab-crystal');
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    // ===================== TAB 2: CRYSTALSLIP 3D =====================
+    function syncCrystalInputs() {
+      const isFCC = state.crystal.structure === 'FCC';
+      const btnFCC = document.getElementById('btn-struct-FCC');
+      const btnBCC = document.getElementById('btn-struct-BCC');
+      btnFCC.className = isFCC
+        ? 'px-3 py-2.5 rounded-lg border text-sm font-semibold transition bg-sky-500/20 border-sky-400 text-sky-200'
+        : 'px-3 py-2.5 rounded-lg border text-sm font-semibold transition bg-[#0F172A] border-[#1E293B] text-slate-400 hover:border-slate-600';
+      btnBCC.className = !isFCC
+        ? 'px-3 py-2.5 rounded-lg border text-sm font-semibold transition bg-amber-500/20 border-amber-400 text-amber-200'
+        : 'px-3 py-2.5 rounded-lg border text-sm font-semibold transition bg-[#0F172A] border-[#1E293B] text-slate-400 hover:border-slate-600';
+
+      document.getElementById('input-u').value = state.crystal.uvw[0];
+      document.getElementById('input-v').value = state.crystal.uvw[1];
+      document.getElementById('input-w').value = state.crystal.uvw[2];
+      document.getElementById('slider-sigma').value = state.crystal.sigma;
+      document.getElementById('val-sigma').textContent = state.crystal.sigma;
+      document.getElementById('slider-crss').value = state.crystal.crss;
+      document.getElementById('val-crss').textContent = Number(state.crystal.crss).toFixed(1).replace(/\.0$/, '');
+    }
+
+    // Exact intersection polygon of plane n·r = d with unit cube [-0.5, 0.5]^3
+    function getPlaneCubePolygon(n, d = 0) {
+      const corners = [
+        [-0.5,-0.5,-0.5], [0.5,-0.5,-0.5], [0.5,0.5,-0.5], [-0.5,0.5,-0.5],
+        [-0.5,-0.5, 0.5], [0.5,-0.5, 0.5], [0.5,0.5, 0.5], [-0.5,0.5, 0.5]
+      ];
+      const edges = [
+        [0,1],[1,2],[2,3],[3,0],
+        [4,5],[5,6],[6,7],[7,4],
+        [0,4],[1,5],[2,6],[3,7]
+      ];
+      const pts = [];
+      edges.forEach(([i, j]) => {
+        const A = corners[i], B = corners[j];
+        const dA = vecDot(n, A) - d;
+        const dB = vecDot(n, B) - d;
+        if (Math.abs(dA) < 1e-8) pts.push([...A]);
+        if (Math.abs(dB) < 1e-8) pts.push([...B]);
+        if (dA * dB < 0) {
+          const t = dA / (dA - dB);
+          pts.push([
+            A[0] + t * (B[0] - A[0]),
+            A[1] + t * (B[1] - A[1]),
+            A[2] + t * (B[2] - A[2])
+          ]);
+        }
+      });
+      // Deduplicate intersection vertices
+      const uniq = [];
+      pts.forEach(p => {
+        if (!uniq.some(q => vecNorm([p[0]-q[0], p[1]-q[1], p[2]-q[2]]) < 1e-4)) {
+          uniq.push(p);
+        }
+      });
+      if (uniq.length < 3) return { vertices: uniq, centroid: [0, 0, 0] };
+
+      // Compute centroid in the plane and sort vertices angularly around it
+      const centroid = [0, 0, 0];
+      uniq.forEach(p => {
+        centroid[0] += p[0];
+        centroid[1] += p[1];
+        centroid[2] += p[2];
+      });
+      centroid[0] /= uniq.length;
+      centroid[1] /= uniq.length;
+      centroid[2] /= uniq.length;
+
+      const nHat = n.map(c => c / vecNorm(n));
+      const ref = Math.abs(nHat[0]) < 0.9 ? [1, 0, 0] : [0, 1, 0];
+      const uRaw = vecCross(nHat, ref);
+      const uAxis = uRaw.map(c => c / vecNorm(uRaw));
+      const vAxis = vecCross(nHat, uAxis);
+
+      uniq.sort((a, b) => {
+        const ra = [a[0] - centroid[0], a[1] - centroid[1], a[2] - centroid[2]];
+        const rb = [b[0] - centroid[0], b[1] - centroid[1], b[2] - centroid[2]];
+        return Math.atan2(vecDot(ra, vAxis), vecDot(ra, uAxis)) -
+               Math.atan2(vecDot(rb, vAxis), vecDot(rb, uAxis));
+      });
+      return { vertices: uniq, centroid };
+    }
+
+    function getUnitCellAtoms(struct) {
+      const atoms = [];
+      // 8 corners
+      for (const x of [-0.5, 0.5]) {
+        for (const y of [-0.5, 0.5]) {
+          for (const z of [-0.5, 0.5]) {
+            atoms.push([x, y, z]);
+          }
+        }
+      }
+      if (struct === 'FCC') {
+        atoms.push(
+          [0, 0, 0.5], [0, 0, -0.5],
+          [0, 0.5, 0], [0, -0.5, 0],
+          [0.5, 0, 0], [-0.5, 0, 0]
+        );
+      } else {
+        atoms.push([0, 0, 0]);
+      }
+      return atoms;
+    }
+
+    function renderCardsAnalogy(mMax, isYielding) {
+      const svg = document.getElementById('cards-analogy-svg');
+      const tilt = Math.min(26, Math.round(mMax * 48));
+      const shift = isYielding ? 9 : 1.5;
+      const strokeCol = isYielding ? '#F43F5E' : '#10B981';
+      let cardsHtml = '';
+      for (let i = 0; i < 5; i++) {
+        const y = 52 - i * 9;
+        const x = 18 + i * shift;
+        const fill = i >= 3 && isYielding ? 'rgba(244,63,94,0.35)' : 'rgba(56,189,248,0.22)';
+        cardsHtml += `<rect x="${x}" y="${y}" width="54" height="7" rx="2" fill="${fill}" stroke="${i >= 3 ? strokeCol : '#38BDF8'}" stroke-width="1.2" transform="rotate(${-tilt * 0.25} 60 36)" />`;
+      }
+      cardsHtml += `<line x1="8" y1="12" x2="${isYielding ? 34 : 24}" y2="12" stroke="#F59E0B" stroke-width="2.2" />`;
+      cardsHtml += `<polygon points="${isYielding ? '34,8 42,12 34,16' : '24,8 32,12 24,16'}" fill="#F59E0B" />`;
+      svg.innerHTML = cardsHtml;
+
+      const txt = document.getElementById('cards-analogy-text');
+      if (isYielding) {
+        txt.innerHTML = '<strong>¡Las cartas resbalaron!</strong> El ángulo de empuje favoreció el deslizamiento y venció la fricción entre planos atómicos.';
+      } else if (mMax < 0.30) {
+        txt.innerHTML = '<strong>Ángulo muy resistente:</strong> Empujar así es como apretar la baraja casi de frente; a las cartas les cuesta muchísimo deslizarse.';
+      } else {
+        txt.innerHTML = '<strong>Aún resiste firme:</strong> Las cartas sienten el empuje inclinado, pero la fricción interna del metal todavía las mantiene en su sitio.';
+      }
+    }
+
+    function updateCrystalTab() {
+      const { structure, uvw, sigma, crss } = state.crystal;
+      const fNorm = vecNorm(uvw);
+      const warn = document.getElementById('dir-warning');
+      if (fNorm < 1e-9) {
+        warn.classList.remove('hidden');
+        return;
+      }
+      warn.classList.add('hidden');
+
+      const rows = computeSchmid(structure, uvw, sigma, crss);
+      const best = rows[0];
+      const isYielding = best.tauR > crss;
+      const ratio = crss > 0 ? best.tauR / crss : 0;
+
+      // Update Explorador panel
+      const badgeExp = document.getElementById('slip-badge-exp');
+      const barFill = document.getElementById('slip-bar-fill');
+      const limitMarker = document.getElementById('slip-bar-limit-marker');
+      const verdictExp = document.getElementById('slip-exp-verdict');
+
+      document.getElementById('slip-exp-current').textContent = best.tauR.toFixed(1);
+      document.getElementById('slip-exp-limit').textContent = Number(crss).toFixed(1);
+
+      // Map bar so that 66.7% of track equals 100% of CRSS (allows showing overshoot up to 150%)
+      const pct = Math.min(100, (ratio / 1.5) * 100);
+      limitMarker.style.left = '66.7%';
+      barFill.style.width = `${pct.toFixed(1)}%`;
+
+      if (isYielding) {
+        badgeExp.textContent = '🔴 ¡EL METAL CEDE!';
+        badgeExp.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        barFill.className = 'h-full rounded-full transition-all duration-300 bg-gradient-to-r from-amber-500 to-rose-500';
+        verdictExp.innerHTML = `<strong class="text-rose-300">Deformación permanente activa:</strong> El empuje de corte (${best.tauR.toFixed(1)} MPa) superó el límite del cristal (${crss} MPa). Los átomos de la mitad superior están resbalando sobre el plano naranja.`;
+      } else if (ratio >= 0.8) {
+        badgeExp.textContent = '🟡 AL LÍMITE';
+        badgeExp.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        barFill.className = 'h-full rounded-full transition-all duration-300 bg-gradient-to-r from-emerald-400 to-amber-400';
+        verdictExp.innerHTML = `<strong class="text-amber-300">Zona de alerta:</strong> El cristal aguanta por poco (${Math.round(ratio * 100)}% de su límite). Un pequeño aumento de carga hará que los planos atómicos comiencen a deslizarse.`;
+      } else {
+        badgeExp.textContent = '🟢 RESISTE FIRME';
+        badgeExp.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        barFill.className = 'h-full rounded-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-emerald-400';
+        verdictExp.innerHTML = `<strong class="text-emerald-300">Zona elástica segura:</strong> El empuje interno es menor al límite del metal (${Math.round(ratio * 100)}%). Si sueltas la fuerza, los átomos regresan exactamente a su lugar.`;
+      }
+      renderCardsAnalogy(best.m, isYielding);
+
+      // Update Ingeniero panel
+      const badgeEng = document.getElementById('slip-badge-eng');
+      badgeEng.textContent = isYielding ? 'FLUENCIA (τ_R > τ_CRSS)' : 'ELÁSTICO (τ_R ≤ τ_CRSS)';
+      badgeEng.className = isYielding
+        ? 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40'
+        : 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+
+      document.getElementById('eng-active-sys').textContent = `${fmtIdx(best.plano, '()')}${fmtIdx(best.direccion, '[]')}`;
+      document.getElementById('eng-cosphi').textContent = best.cosPhi.toFixed(4);
+      document.getElementById('eng-coslam').textContent = best.cosLam.toFixed(4);
+      document.getElementById('eng-mmax').textContent = best.m.toFixed(4);
+      document.getElementById('eng-taur').textContent = best.tauR.toFixed(2);
+      document.getElementById('table-struct-label').textContent = `${structure} ${structure === 'FCC' ? '{111}<110>' : '{110}<111>'}`;
+
+      // Render 12-system table
+      const tbody = document.getElementById('schmid-table-body');
+      tbody.innerHTML = rows.map((r, idx) => {
+        const isTop = Math.abs(r.m - best.m) < 1e-4;
+        const rowBg = r.active
+          ? 'bg-rose-500/10 text-rose-100'
+          : isTop ? 'bg-sky-500/10 text-sky-100' : 'text-slate-300';
+        const statusBadge = r.active
+          ? '<span class="px-2 py-0.5 rounded bg-rose-500/25 text-rose-300 text-[10px] font-bold">DESLIZA</span>'
+          : isTop
+            ? '<span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px]">MÁX m</span>'
+            : '<span class="text-slate-500 text-[10px]">Inactivo</span>';
+        return `
+          <tr class="${rowBg} hover:bg-slate-800/60 transition">
+            <td class="py-1.5 px-2 text-slate-400">${r.id}</td>
+            <td class="py-1.5 px-2 font-semibold">${fmtIdx(r.plano, '()')}</td>
+            <td class="py-1.5 px-2 font-semibold">${fmtIdx(r.direccion, '[]')}</td>
+            <td class="py-1.5 px-2 text-right">${r.cosPhi.toFixed(4)}</td>
+            <td class="py-1.5 px-2 text-right">${r.cosLam.toFixed(4)}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${isTop ? 'text-sky-300' : ''}">${r.m.toFixed(4)}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${r.active ? 'text-rose-300' : 'text-amber-300'}">${r.tauR.toFixed(2)}</td>
+            <td class="py-1.5 px-2 text-center">${statusBadge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render 3D Plotly Unit Cell
+      renderCrystal3D(structure, uvw, best, isYielding, crss);
+    }
+
+    function renderCrystal3D(structure, uvw, best, isYielding, crss) {
+      // Cube wireframe
+      const c = [
+        [-0.5,-0.5,-0.5], [0.5,-0.5,-0.5], [0.5,0.5,-0.5], [-0.5,0.5,-0.5],
+        [-0.5,-0.5, 0.5], [0.5,-0.5, 0.5], [0.5,0.5, 0.5], [-0.5,0.5, 0.5]
+      ];
+      const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      const wx = [], wy = [], wz = [];
+      edges.forEach(([i, j]) => {
+        wx.push(c[i][0], c[j][0], null);
+        wy.push(c[i][1], c[j][1], null);
+        wz.push(c[i][2], c[j][2], null);
+      });
+
+      const traces = [
+        {
+          type: 'scatter3d',
+          mode: 'lines',
+          name: 'Celda unitaria',
+          x: wx, y: wy, z: wz,
+          line: { color: '#475569', width: 3 },
+          hoverinfo: 'skip'
+        }
+      ];
+
+      // Crystallographically exact plane offset d in unit cell [-0.5, 0.5]^3
+      // FCC {111}: d = 0.5 * sign(n_x + n_y + n_z || 1) -> exact equilateral triangle through 3 corners & 3 face centers
+      // BCC {110}: d = 0 -> exact diagonal rectangle through edge-to-edge corners & central atom
+      const nVec = best.plano;
+      const planeD = structure === 'FCC'
+        ? 0.5 * Math.sign((nVec[0] + nVec[1] + nVec[2]) || 1)
+        : 0;
+
+      // Exact polygon and centroid in the slip plane
+      const { vertices: poly, centroid: planeCenter } = getPlaneCubePolygon(nVec, planeD);
+
+      // Atoms & Coherent Visual Slip Displacement separated by sign of (n · r - d)
+      const atoms = getUnitCellAtoms(structure);
+      const sHat = best.direccion.map(v => v / vecNorm(best.direccion));
+      const slipMag = isYielding ? Math.min(0.28, 0.10 + 0.18 * ((best.tauR - crss) / Math.max(crss, 10))) : 0;
+
+      const fixedX = [], fixedY = [], fixedZ = [];
+      const onPlaneX = [], onPlaneY = [], onPlaneZ = [];
+      const movedX = [], movedY = [], movedZ = [];
+      const ghostX = [], ghostY = [], ghostZ = [];
+      const trailX = [], trailY = [], trailZ = [];
+
+      const EPS = 1e-6;
+      atoms.forEach(a => {
+        const signedVal = vecDot(nVec, a) - planeD;
+        const isOnOrAbove = signedVal >= -EPS;
+        const isOnPlane = Math.abs(signedVal) < EPS;
+
+        if (isYielding && isOnOrAbove) {
+          const m = [a[0] + sHat[0]*slipMag, a[1] + sHat[1]*slipMag, a[2] + sHat[2]*slipMag];
+          movedX.push(m[0]); movedY.push(m[1]); movedZ.push(m[2]);
+          ghostX.push(a[0]); ghostY.push(a[1]); ghostZ.push(a[2]);
+          trailX.push(a[0], m[0], null);
+          trailY.push(a[1], m[1], null);
+          trailZ.push(a[2], m[2], null);
+        } else if (!isYielding && isOnPlane) {
+          onPlaneX.push(a[0]); onPlaneY.push(a[1]); onPlaneZ.push(a[2]);
+        } else {
+          fixedX.push(a[0]); fixedY.push(a[1]); fixedZ.push(a[2]);
+        }
+      });
+
+      traces.push({
+        type: 'scatter3d',
+        mode: 'markers',
+        name: 'Átomos base',
+        x: fixedX, y: fixedY, z: fixedZ,
+        marker: { size: 9, color: '#38BDF8', line: { color: '#0B1120', width: 1.5 }, opacity: 0.92 },
+        hovertemplate: 'Átomo fijo (n·r < d)<extra></extra>'
+      });
+
+      if (!isYielding && onPlaneX.length > 0) {
+        traces.push({
+          type: 'scatter3d',
+          mode: 'markers',
+          name: 'Átomos compactos en el plano',
+          x: onPlaneX, y: onPlaneY, z: onPlaneZ,
+          marker: { size: 10.5, color: '#FBBF24', line: { color: '#FEF3C7', width: 2 }, opacity: 1 },
+          hovertemplate: 'Átomo en el plano de deslizamiento (n·r = d)<extra></extra>'
+        });
+      }
+
+      if (isYielding && movedX.length > 0) {
+        traces.push({
+          type: 'scatter3d',
+          mode: 'markers',
+          name: 'Posición original',
+          x: ghostX, y: ghostY, z: ghostZ,
+          marker: { size: 6.5, color: '#94A3B8', opacity: 0.35 },
+          hoverinfo: 'skip'
+        });
+        traces.push({
+          type: 'scatter3d',
+          mode: 'lines',
+          name: 'Estela de deslizamiento',
+          x: trailX, y: trailY, z: trailZ,
+          line: { color: '#F59E0B', width: 3.5, dash: 'dot' },
+          hoverinfo: 'skip'
+        });
+        traces.push({
+          type: 'scatter3d',
+          mode: 'markers',
+          name: 'Átomos desplazados (n·r ≥ d)',
+          x: movedX, y: movedY, z: movedZ,
+          marker: { size: 10, color: '#F59E0B', line: { color: '#FEF3C7', width: 1.5 }, opacity: 1 },
+          hovertemplate: 'Átomo desplazado paralelamente a s (n·r ≥ d)<extra></extra>'
+        });
+      }
+
+      // Active Shaded Slip Plane (mesh3d) with angularly sorted vertices around centroid
+      if (poly.length >= 3) {
+        const mi = [], mj = [], mk = [];
+        for (let k = 1; k < poly.length - 1; k++) {
+          mi.push(0); mj.push(k); mk.push(k + 1);
+        }
+        traces.push({
+          type: 'mesh3d',
+          name: `Plano ${fmtIdx(best.plano, '()')}`,
+          x: poly.map(p => p[0]),
+          y: poly.map(p => p[1]),
+          z: poly.map(p => p[2]),
+          i: mi, j: mj, k: mk,
+          color: isYielding ? '#F43F5E' : '#F59E0B',
+          opacity: isYielding ? 0.42 : 0.30,
+          flatshading: true,
+          hoverinfo: 'name'
+        });
+        // Closed plane perimeter outline
+        const bx = [...poly.map(p => p[0]), poly[0][0]];
+        const by = [...poly.map(p => p[1]), poly[0][1]];
+        const bz = [...poly.map(p => p[2]), poly[0][2]];
+        traces.push({
+          type: 'scatter3d',
+          mode: 'lines',
+          x: bx, y: by, z: bz,
+          line: { color: isYielding ? '#FB7185' : '#FBBF24', width: 4.5 },
+          hoverinfo: 'skip',
+          showlegend: false
+        });
+      }
+
+      // Active Slip Direction Vector s centered on the slip plane centroid
+      const sLen = structure === 'FCC' ? 0.36 : 0.44;
+      traces.push({
+        type: 'scatter3d',
+        mode: 'lines+markers',
+        name: `Dirección ${fmtIdx(best.direccion, '[]')}`,
+        x: [planeCenter[0] - sHat[0]*sLen, planeCenter[0] + sHat[0]*sLen],
+        y: [planeCenter[1] - sHat[1]*sLen, planeCenter[1] + sHat[1]*sLen],
+        z: [planeCenter[2] - sHat[2]*sLen, planeCenter[2] + sHat[2]*sLen],
+        line: { color: '#10B981', width: 6.5 },
+        marker: { size: [3, 7.5], color: '#10B981', symbol: ['circle', 'diamond'] },
+        hovertemplate: `Dirección de deslizamiento s = ${fmtIdx(best.direccion, '[]')}<extra></extra>`
+      });
+
+      // Applied Force Vector [u v w]
+      const fHat = uvw.map(v => v / vecNorm(uvw));
+      traces.push({
+        type: 'scatter3d',
+        mode: 'lines+markers+text',
+        name: `Fuerza ${fmtIdx(uvw, '[]')}`,
+        x: [-fHat[0]*0.78, fHat[0]*0.78],
+        y: [-fHat[1]*0.78, fHat[1]*0.78],
+        z: [-fHat[2]*0.78, fHat[2]*0.78],
+        text: ['', `F ${fmtIdx(uvw, '[]')}`],
+        textposition: 'top center',
+        textfont: { color: '#FB7185', size: 12, family: 'JetBrains Mono' },
+        line: { color: '#F43F5E', width: 7 },
+        marker: { size: [4, 8], color: '#F43F5E', symbol: ['circle', 'diamond'] },
+        hovertemplate: `Eje de fuerza ${fmtIdx(uvw, '[]')}<extra></extra>`
+      });
+
+      const layout = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(15,23,42,0.6)',
+        margin: { l: 0, r: 0, t: 10, b: 0 },
+        showlegend: false,
+        font: { color: '#CBD5E1', family: 'Inter, sans-serif' },
+        scene: {
+          bgcolor: 'rgba(15,23,42,0.6)',
+          aspectmode: 'cube',
+          camera: { eye: { x: 1.55, y: 1.45, z: 1.15 } },
+          xaxis: { title: 'X [100]', range: [-0.9, 0.9], color: '#CBD5E1', gridcolor: '#1E293B', zerolinecolor: '#334155', showbackground: true, backgroundcolor: 'rgba(11,17,32,0.55)', tickfont: { size: 10, color: '#94A3B8' } },
+          yaxis: { title: 'Y [010]', range: [-0.9, 0.9], color: '#CBD5E1', gridcolor: '#1E293B', zerolinecolor: '#334155', showbackground: true, backgroundcolor: 'rgba(11,17,32,0.55)', tickfont: { size: 10, color: '#94A3B8' } },
+          zaxis: { title: 'Z [001]', range: [-0.9, 0.9], color: '#CBD5E1', gridcolor: '#1E293B', zerolinecolor: '#334155', showbackground: true, backgroundcolor: 'rgba(11,17,32,0.55)', tickfont: { size: 10, color: '#94A3B8' } }
+        }
+      };
+
+      Plotly.react('plot-crystal-3d', traces, layout, PLOTLY_CONFIG);
+    }
+
+    // ===================== TAB 3: DIFFUSIOLAB =====================
+    let canvasW = 600, canvasH = 230;
+    let interstitials = [];
+
+    function configureDiffusionMechanism(idx) {
+      state.diffusion.mechIndex = idx;
+      const mech = DATA.mecanismos_difusion[idx];
+      state.diffusion.T_c = mech.T_default_c;
+      state.diffusion.Cs = mech.Cs_default;
+      state.diffusion.C0 = mech.C0_default;
+
+      const sT = document.getElementById('slider-temp');
+      sT.min = mech.T_min_c;
+      sT.max = mech.T_max_c;
+      sT.step = 5;
+      sT.value = mech.T_default_c;
+      document.getElementById('temp-min-lbl').textContent = `${mech.T_min_c} °C`;
+      document.getElementById('temp-max-lbl').textContent = `${mech.T_max_c} °C`;
+
+      // Scale Cs and C0 sliders appropriately for low-solubility ferrite vs austenite/nitriding
+      const sCs = document.getElementById('slider-cs');
+      const sC0 = document.getElementById('slider-c0');
+      if (mech.id === 'C_en_Fe_alpha') {
+        sCs.min = 0.008; sCs.max = 0.025; sCs.step = 0.001; sCs.value = mech.Cs_default;
+        sC0.min = 0.001; sC0.max = 0.015; sC0.step = 0.001; sC0.value = mech.C0_default;
+      } else if (mech.id === 'N_en_Fe_alpha') {
+        sCs.min = 0.2; sCs.max = 1.2; sCs.step = 0.02; sCs.value = mech.Cs_default;
+        sC0.min = 0.0; sC0.max = 0.25; sC0.step = 0.01; sC0.value = mech.C0_default;
+      } else {
+        sCs.min = 0.45; sCs.max = 1.8; sCs.step = 0.05; sCs.value = mech.Cs_default;
+        sC0.min = 0.05; sC0.max = 0.35; sC0.step = 0.01; sC0.value = mech.C0_default;
+      }
+
+      document.getElementById('select-mechanism').value = idx;
+      document.getElementById('mechanism-desc').textContent = mech.descripcion;
+      resetInterstitialAtoms();
+      updateDiffusioTab();
+    }
+
+    function updateDiffusioTab() {
+      const mech = DATA.mecanismos_difusion[state.diffusion.mechIndex];
+      const { T_c, time_h, Cs, C0 } = state.diffusion;
+      const decimals = mech.id === 'C_en_Fe_alpha' ? 3 : 2;
+
+      document.getElementById('val-temp').textContent = T_c;
+      document.getElementById('val-time').textContent = Number(time_h).toFixed(1);
+      document.getElementById('val-cs').textContent = Number(Cs).toFixed(decimals);
+      document.getElementById('val-c0').textContent = Number(C0).toFixed(decimals);
+
+      const res = computeCaseDepthMM(mech, T_c, time_h, Cs, C0, 0.40);
+      const tNorm = (T_c - mech.T_min_c) / Math.max(1, mech.T_max_c - mech.T_min_c);
+
+      // Update Explorador indicators
+      const speedPct = Math.round(18 + tNorm * 82);
+      document.getElementById('diff-exp-speed-bar').style.width = `${speedPct}%`;
+      const speedLabel = document.getElementById('diff-exp-speed-label');
+      const speedNote = document.getElementById('diff-exp-speed-note');
+      if (tNorm < 0.33) {
+        speedLabel.textContent = 'Salto moderado';
+        speedLabel.className = 'font-bold text-sky-300';
+        speedNote.textContent = 'A esta temperatura los átomos vibran despacio; necesitan muchas horas para avanzar.';
+      } else if (tNorm < 0.72) {
+        speedLabel.textContent = 'Agitación intensa';
+        speedLabel.className = 'font-bold text-emerald-300';
+        speedNote.textContent = 'Zona óptima industrial: los átomos saltan ágilmente entre los huecos del metal.';
+      } else {
+        speedLabel.textContent = 'Difusión acelerada (Turbo)';
+        speedLabel.className = 'font-bold text-amber-400';
+        speedNote.textContent = 'El calor extremo dispara la velocidad exponencialmente: ¡cada +50 °C casi duplica el ritmo de entrada!';
+      }
+
+      document.getElementById('diff-exp-depth').textContent = res.depthMM.toFixed(2);
+      const sheets = Math.max(1, Math.round(res.depthMM / 0.1));
+      const depthNote = document.getElementById('diff-exp-depth-note');
+      if (res.validTarget) {
+        depthNote.textContent = `Equivalente al grosor de ~${sheets} hojas de papel apiladas (zona que alcanza al menos 0.40% C para quedar ultradura).`;
+      } else {
+        depthNote.textContent = `Para este mecanismo de baja solubilidad, la zona enriquecida (punto medio ${res.effectiveTarget.toFixed(decimals)}%) penetra ~${res.depthMM.toFixed(2)} mm.`;
+      }
+
+      // Update Ingeniero readouts
+      document.getElementById('eng-d0').textContent = mech.D0.toExponential(2);
+      document.getElementById('eng-qd').textContent = (mech.Qd / 1000).toFixed(2);
+      document.getElementById('eng-dt').textContent = res.D.toExponential(2);
+      document.getElementById('eng-charlen').textContent = res.charLenMM.toFixed(3);
+      document.getElementById('eng-target-c-lbl').textContent = res.validTarget ? '0.40% C' : `${res.effectiveTarget.toFixed(decimals)}%`;
+      document.getElementById('eng-eff-depth').textContent = `${res.depthMM.toFixed(3)} mm`;
+      document.getElementById('eng-erf-check').textContent = `z = ${res.z.toFixed(3)} → erf = ${res.erfVal.toFixed(4)}`;
+
+      document.getElementById('fick-chart-badge').textContent = res.validTarget
+        ? `Profundidad efectiva (0.40% C): ${res.depthMM.toFixed(2)} mm`
+        : `Profundidad media (${res.effectiveTarget.toFixed(decimals)}%): ${res.depthMM.toFixed(2)} mm`;
+
+      // Render Plotly C(x,t)
+      renderFickPlot(mech, T_c, time_h, Cs, C0, res, decimals);
+    }
+
+    function renderFickPlot(mech, T_c, time_h, Cs, C0, res, decimals) {
+      const maxDepth = Math.max(1.5, Math.ceil(res.charLenMM * 2.4 * 2) / 2);
+      const steps = 90;
+      const xs = [], cs = [];
+      const denomMM = Math.max(1e-6, res.charLenMM);
+
+      for (let i = 0; i <= steps; i++) {
+        const x = (maxDepth * i) / steps;
+        const z = x / denomMM;
+        const val = Cs - (Cs - C0) * erfFromTable(z);
+        xs.push(x);
+        cs.push(val);
+      }
+
+      const targetY = res.validTarget ? 0.40 : res.effectiveTarget;
+      const traces = [
+        {
+          type: 'scatter',
+          mode: 'lines',
+          name: 'C(x, t)',
+          x: xs,
+          y: cs,
+          line: { color: '#38BDF8', width: 3.5 },
+          fill: 'tozeroy',
+          fillcolor: 'rgba(56, 189, 248, 0.12)',
+          hovertemplate: 'Profundidad: %{x:.2f} mm<br>Concentración: %{y:.' + decimals + 'f}%<extra></extra>'
+        },
+        {
+          type: 'scatter',
+          mode: 'lines',
+          name: res.validTarget ? 'Umbral 0.40% C' : 'Umbral medio',
+          x: [0, maxDepth],
+          y: [targetY, targetY],
+          line: { color: '#F59E0B', width: 1.8, dash: 'dash' },
+          hoverinfo: 'skip'
+        },
+        {
+          type: 'scatter',
+          mode: 'lines+markers',
+          name: 'Profundidad efectiva',
+          x: [res.depthMM, res.depthMM],
+          y: [0, targetY],
+          line: { color: '#10B981', width: 2.2, dash: 'dot' },
+          marker: { size: [0, 10], color: '#10B981', line: { color: '#0B1120', width: 2 } },
+          hovertemplate: `Profundidad efectiva: ${res.depthMM.toFixed(2)} mm<extra></extra>`
+        }
+      ];
+
+      const layout = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(15,23,42,0.6)',
+        margin: { l: 55, r: 20, t: 24, b: 44 },
+        showlegend: false,
+        font: { color: '#CBD5E1', family: 'Inter, sans-serif', size: 11 },
+        xaxis: {
+          title: 'Profundidad desde la superficie x (mm)',
+          range: [0, maxDepth],
+          gridcolor: '#1E293B',
+          zerolinecolor: '#334155',
+          color: '#CBD5E1'
+        },
+        yaxis: {
+          title: 'Concentración (% peso)',
+          range: [0, Math.max(Cs * 1.15, targetY * 1.25)],
+          gridcolor: '#1E293B',
+          zerolinecolor: '#334155',
+          color: '#CBD5E1'
+        },
+        annotations: [
+          {
+            x: res.depthMM,
+            y: targetY,
+            text: `  x_eff = ${res.depthMM.toFixed(2)} mm`,
+            showarrow: true,
+            arrowhead: 2,
+            ax: 42,
+            ay: -28,
+            font: { color: '#10B981', size: 12, family: 'JetBrains Mono' },
+            arrowcolor: '#10B981',
+            bgcolor: 'rgba(11,17,32,0.88)',
+            bordercolor: '#10B981',
+            borderpad: 4
+          }
+        ]
+      };
+
+      Plotly.react('plot-fick', traces, layout, PLOTLY_CONFIG);
+    }
+
+    // ---- 2D Diffusion Canvas Animation ----
+    function resizeDiffusionCanvas() {
+      const canvas = document.getElementById('diffusion-canvas');
+      if (!canvas || !canvas.parentElement) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      if (rect.width < 10) return;
+      const dpr = window.devicePixelRatio || 1;
+      canvasW = rect.width;
+      canvasH = 230;
+      canvas.width = Math.round(canvasW * dpr);
+      canvas.height = Math.round(canvasH * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function resetInterstitialAtoms() {
+      interstitials = [];
+      for (let i = 0; i < 62; i++) {
+        const startLeft = i < 42;
+        interstitials.push({
+          x: startLeft ? (6 + Math.random() * 28) : (35 + Math.random() * 140),
+          y: 22 + Math.random() * (canvasH - 44),
+          vx: 0,
+          vy: 0,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    let animTime = 0;
+    function animateDiffusionCanvas() {
+      requestAnimationFrame(animateDiffusionCanvas);
+      if (state.activeTab !== 'tab-diffusio') return;
+
+      const canvas = document.getElementById('diffusion-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (canvasW < 50) resizeDiffusionCanvas();
+
+      const mech = DATA.mecanismos_difusion[state.diffusion.mechIndex];
+      const tNorm = (state.diffusion.T_c - mech.T_min_c) / Math.max(1, mech.T_max_c - mech.T_min_c);
+      const vibAmp = 1.0 + tNorm * 3.8;
+      const hopSpeed = 0.65 + Math.pow(tNorm, 1.7) * 3.8;
+      const targetReach = Math.min(0.92, 0.20 + tNorm * 0.45 + (state.diffusion.time_h / 24) * 0.35);
+
+      animTime += 0.08 + tNorm * 0.14;
+      ctx.clearRect(0, 0, canvasW, canvasH);
+
+      // Background depth gradient representing Cs -> C0
+      const grad = ctx.createLinearGradient(0, 0, canvasW * targetReach, 0);
+      grad.addColorStop(0, 'rgba(16, 185, 129, 0.22)');
+      grad.addColorStop(0.55, 'rgba(56, 189, 248, 0.09)');
+      grad.addColorStop(1, 'rgba(11, 17, 32, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+
+      // Surface wall highlight
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+      ctx.fillRect(0, 0, 5, canvasH);
+
+      // Draw vibrating host lattice
+      const spacing = 36;
+      const cols = Math.ceil(canvasW / spacing) + 1;
+      const rows = Math.floor((canvasH - 36) / spacing) + 1;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const bx = 22 + c * spacing;
+          const by = 24 + r * spacing;
+          const ox = Math.sin(animTime + c * 1.7 + r * 2.3) * vibAmp;
+          const oy = Math.cos(animTime * 1.15 + c * 2.1 - r * 1.4) * vibAmp;
+
+          ctx.beginPath();
+          ctx.arc(bx + ox, by + oy, 9.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#1E293B';
+          ctx.fill();
+          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = tNorm > 0.65 ? 'rgba(245, 158, 11, 0.45)' : 'rgba(100, 116, 139, 0.55)';
+          ctx.stroke();
+        }
+      }
+
+      // Update & draw jumping interstitial atoms
+      const maxAllowedX = canvasW * targetReach;
+      interstitials.forEach(p => {
+        if (Math.random() < 0.08 + tNorm * 0.18) {
+          const biasRight = p.x < maxAllowedX * 0.65 ? 0.52 : -0.15;
+          p.vx = (Math.random() - 0.5 + biasRight) * hopSpeed * 2.4;
+          p.vy = (Math.random() - 0.5) * hopSpeed * 2.2;
+        }
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.88;
+        p.vy *= 0.88;
+
+        // Keep inside bounds; replenish from left surface
+        if (p.x < 7) p.x = 7 + Math.random() * 8;
+        if (p.x > maxAllowedX) {
+          if (Math.random() < 0.25) {
+            p.x = 8 + Math.random() * 14;
+            p.y = 20 + Math.random() * (canvasH - 40);
+          } else {
+            p.x = maxAllowedX;
+            p.vx = -Math.abs(p.vx);
+          }
+        }
+        if (p.y < 18) { p.y = 18; p.vy = Math.abs(p.vy); }
+        if (p.y > canvasH - 22) { p.y = canvasH - 22; p.vy = -Math.abs(p.vy); }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#F59E0B';
+        ctx.shadowColor = '#F59E0B';
+        ctx.shadowBlur = 7;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    // ===================== TAB 4: MINIJUEGOS =====================
+    const MISSIONS = {
+      turbine: {
+        name: 'Álade de Turbina (95 MPa)',
+        structure: 'FCC',
+        sigma: 95,
+        crss: 40
+      },
+      implant: {
+        name: 'Implante Óseo bajo Carga (110 MPa)',
+        structure: 'BCC',
+        sigma: 110,
+        crss: 46
+      }
+    };
+
+    function updateTotalStars() {
+      const total = state.games.g1Best + state.games.g2Best;
+      document.getElementById('games-total-stars').textContent = `${total} / 6 ★`;
+    }
+
+    function renderStars(count) {
+      return '<span class="text-amber-400">' + '★'.repeat(count) + '</span>' +
+             '<span class="text-slate-600">' + '★'.repeat(3 - count) + '</span>';
+    }
+
+    function runGame1() {
+      const m = MISSIONS[state.games.g1Mission];
+      const ori = state.games.g1Ori;
+      const rows = computeSchmid(m.structure, ori, m.sigma, m.crss);
+      const best = rows[0];
+      const yields = best.tauR > m.crss;
+
+      const bar = document.getElementById('g1-bar');
+      const limitLine = document.getElementById('g1-limit-line');
+      const statusTag = document.getElementById('g1-status-tag');
+      const feedback = document.getElementById('g1-feedback');
+
+      // Reset bar quickly then animate
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      void bar.offsetWidth;
+      bar.style.transition = 'width 0.75s cubic-bezier(0.22, 1, 0.36, 1)';
+
+      const maxScale = m.crss * 1.38;
+      const limitPct = (m.crss / maxScale) * 100;
+      const valPct = Math.min(100, (best.tauR / maxScale) * 100);
+      limitLine.style.left = `${limitPct.toFixed(1)}%`;
+
+      let stars = 1;
+      let title = '';
+      let desc = '';
+
+      if (yields) {
+        stars = 1;
+        bar.className = 'h-full rounded-full bg-gradient-to-r from-amber-500 to-rose-500';
+        statusTag.textContent = '❌ CEDE Y SE DEFORMA';
+        statusTag.className = 'font-mono font-bold text-rose-400';
+        title = '¡El cristal cedió bajo la carga!';
+        desc = state.mode === 'explorador'
+          ? `Con la orientación [${ori.join('')}] los planos quedaron muy inclinados a favor del empuje (${best.tauR.toFixed(1)} MPa > ${m.crss} MPa). Prueba una orientación más simétrica como [111].`
+          : `Falla plástica: m_max = ${best.m.toFixed(4)} genera τ_R = ${best.tauR.toFixed(2)} MPa > τ_CRSS (${m.crss} MPa). Orienta hacia [111] para reducir el factor de Schmid a 0.2722.`;
+      } else if (best.tauR <= m.crss * 0.78) {
+        stars = 3;
+        bar.className = 'h-full rounded-full bg-gradient-to-r from-sky-400 to-emerald-400';
+        statusTag.textContent = '✅ RESISTENCIA ÓPTIMA';
+        statusTag.className = 'font-mono font-bold text-emerald-400';
+        title = '¡Excelente ingeniería cristalina!';
+        desc = state.mode === 'explorador'
+          ? `¡Sobrevivió con enorme margen! La orientación [${ori.join('')}] bloquea el deslizamiento (empuje de solo ${best.tauR.toFixed(1)} MPa frente a un límite de ${m.crss} MPa).`
+          : `Diseño óptimo: en [${ori.join('')}] el factor de Schmid cae a m_max = ${best.m.toFixed(4)}, dando τ_R = ${best.tauR.toFixed(2)} MPa (factor de seguridad ${(m.crss / best.tauR).toFixed(2)}x).`;
+      } else {
+        stars = 2;
+        bar.className = 'h-full rounded-full bg-gradient-to-r from-emerald-400 to-amber-400';
+        statusTag.textContent = '⚠️ RESISTE AL LÍMITE';
+        statusTag.className = 'font-mono font-bold text-amber-300';
+        title = 'Sobrevivió, pero con margen estrecho';
+        desc = state.mode === 'explorador'
+          ? `La pieza resistió (${best.tauR.toFixed(1)} MPa frente a ${m.crss} MPa), aunque muy cerca del límite. ¿Puedes encontrar una orientación que aguante todavía mejor?`
+          : `Fluencia evitada por poco: m_max = ${best.m.toFixed(4)}, τ_R = ${best.tauR.toFixed(2)} MPa ≤ ${m.crss} MPa. Nota: en turbinas reales [100] se aprecia por su bajo módulo E, pero [111] minimiza τ_R.`;
+      }
+
+      requestAnimationFrame(() => { bar.style.width = `${valPct.toFixed(1)}%`; });
+      document.getElementById('g1-tau-val').textContent = `${best.tauR.toFixed(1)} MPa`;
+      document.getElementById('g1-crss-val').textContent = `${m.crss.toFixed(1)} MPa`;
+      document.getElementById('g1-verdict-title').textContent = title;
+      document.getElementById('g1-verdict-title').className = `font-bold text-sm ${stars === 3 ? 'text-emerald-300' : stars === 2 ? 'text-amber-300' : 'text-rose-300'}`;
+      document.getElementById('g1-stars-result').innerHTML = renderStars(stars);
+      document.getElementById('g1-verdict-desc').textContent = desc;
+      feedback.classList.remove('hidden');
+
+      if (stars > state.games.g1Best) {
+        state.games.g1Best = stars;
+        document.getElementById('g1-best-stars').innerHTML = renderStars(stars);
+        updateTotalStars();
+      }
+    }
+
+    // ---- Minijuego 2: Maestro del Horno ----
+    function renderGame2Order() {
+      const { target, tol, maxTime } = state.games.g2Order;
+      document.getElementById('g2-target-text').textContent = `${target.toFixed(2)} mm ± ${tol.toFixed(2)} mm`;
+      document.getElementById('g2-maxtime-text').textContent = `${maxTime.toFixed(1)} h`;
+
+      const maxScale = 1.40;
+      const leftPct = Math.max(0, ((target - tol) / maxScale) * 100);
+      const widthPct = Math.min(100 - leftPct, ((2 * tol) / maxScale) * 100);
+      const centerPct = (target / maxScale) * 100;
+
+      document.getElementById('g2-target-band').style.left = `${leftPct.toFixed(1)}%`;
+      document.getElementById('g2-target-band').style.width = `${widthPct.toFixed(1)}%`;
+      document.getElementById('g2-target-center').style.left = `${centerPct.toFixed(1)}%`;
+      document.getElementById('g2-result-marker').style.opacity = '0';
+      document.getElementById('g2-depth-readout').textContent = 'Sin hornear';
+      document.getElementById('g2-feedback').classList.add('hidden');
+    }
+
+    function generateNewFurnaceOrder() {
+      // Always solvable in C_en_Fe_gamma (850-1000°C) within maxTime
+      const target = Number((0.48 + Math.random() * 0.44).toFixed(2)); // 0.48 - 0.92 mm
+      const tol = 0.08;
+      const maxTime = Number((6 + Math.floor(Math.random() * 5)).toFixed(1)); // 6,7,8,9,10 h
+      state.games.g2Order = { target, tol, maxTime };
+      renderGame2Order();
+    }
+
+    function runGame2() {
+      const mech = DATA.mecanismos_difusion[0]; // C_en_Fe_gamma
+      const T = Number(document.getElementById('g2-slider-t').value);
+      const t = Number(document.getElementById('g2-slider-time').value);
+      const { target, tol, maxTime } = state.games.g2Order;
+
+      const res = computeCaseDepthMM(mech, T, t, 1.0, 0.15, 0.40);
+      const err = Math.abs(res.depthMM - target);
+      const overTime = t > maxTime;
+
+      const marker = document.getElementById('g2-result-marker');
+      const pct = Math.min(98, Math.max(2, (res.depthMM / 1.40) * 100));
+      marker.style.opacity = '1';
+      marker.style.left = `${pct.toFixed(1)}%`;
+
+      document.getElementById('g2-depth-readout').textContent = `Logrado: ${res.depthMM.toFixed(2)} mm en ${t.toFixed(1)} h`;
+
+      let stars = 1;
+      let title = '';
+      let desc = '';
+
+      if (!overTime && err <= tol * 0.5) {
+        stars = 3;
+        marker.className = 'absolute top-1 bottom-1 w-3 -ml-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_#10B981] transition-all duration-700 ease-out';
+        title = '¡Precisión de Maestro Metalúrgico!';
+        desc = `Coraza exacta de ${res.depthMM.toFixed(2)} mm (error de solo ${err.toFixed(2)} mm) dentro del límite de ${maxTime.toFixed(1)} h.`;
+      } else if (!overTime && err <= tol) {
+        stars = 2;
+        marker.className = 'absolute top-1 bottom-1 w-3 -ml-1.5 rounded-full bg-sky-400 shadow-[0_0_12px_#38BDF8] transition-all duration-700 ease-out';
+        title = '¡Pieza aprobada en control de calidad!';
+        desc = `Quedó dentro de la tolerancia (${res.depthMM.toFixed(2)} mm vs objetivo ${target.toFixed(2)} mm). Un ajuste fino de ±10 °C te dará las 3 estrellas.`;
+      } else {
+        stars = 1;
+        marker.className = 'absolute top-1 bottom-1 w-3 -ml-1.5 rounded-full bg-rose-500 shadow-[0_0_12px_#F43F5E] transition-all duration-700 ease-out';
+        if (overTime) {
+          title = 'Excediste el tiempo máximo de horno';
+          desc = `Usaste ${t.toFixed(1)} h (límite ${maxTime.toFixed(1)} h). Sube la temperatura para acelerar los saltos atómicos y terminar más rápido.`;
+        } else if (res.depthMM < target - tol) {
+          title = 'Coraza demasiado delgada';
+          desc = `Alcanzaste ${res.depthMM.toFixed(2)} mm y necesitabas al menos ${(target - tol).toFixed(2)} mm. Sube la temperatura o dale más horas dentro del límite.`;
+        } else {
+          title = 'Coraza demasiado profunda (sobre-cementada)';
+          desc = `Llegaste a ${res.depthMM.toFixed(2)} mm (máximo permitido ${(target + tol).toFixed(2)} mm). Reduce ligeramente la temperatura o el tiempo.`;
+        }
+      }
+
+      document.getElementById('g2-verdict-title').textContent = title;
+      document.getElementById('g2-verdict-title').className = `font-bold text-sm ${stars === 3 ? 'text-emerald-300' : stars === 2 ? 'text-sky-300' : 'text-rose-300'}`;
+      document.getElementById('g2-stars-result').innerHTML = renderStars(stars);
+      document.getElementById('g2-verdict-desc').textContent = desc;
+      document.getElementById('g2-feedback').classList.remove('hidden');
+
+      if (stars > state.games.g2Best) {
+        state.games.g2Best = stars;
+        document.getElementById('g2-best-stars').innerHTML = renderStars(stars);
+        updateTotalStars();
+      }
+    }
+
+    // ===================== INITIALIZATION =====================
+    function initApp() {
+      // Credits from DATA.autores
+      if (Array.isArray(DATA.autores) && DATA.autores.length) {
+        document.getElementById('header-authors').textContent = DATA.autores.join(' · ');
+        document.getElementById('footer-authors').textContent = 'Desarrollado por ' + DATA.autores.join(' y ');
+      }
+
+      // Methodology modal from DATA.metodologia
+      if (DATA.metodologia) {
+        document.getElementById('modal-meth-title').textContent = DATA.metodologia.titulo || 'Fundamentos y Metodología';
+        document.getElementById('modal-meth-summary').textContent = DATA.metodologia.resumen || '';
+        const stepsContainer = document.getElementById('modal-meth-steps');
+        stepsContainer.innerHTML = (DATA.metodologia.pasos || []).map(p => `
+          <div class="lab-subcard p-3.5">
+            <div class="text-xs sm:text-sm font-bold text-sky-300 mb-1">${p.paso}</div>
+            <p class="text-xs text-slate-300 leading-relaxed">${p.descripcion}</p>
+          </div>
+        `).join('');
+      }
+
+      // Modal events
+      const modal = document.getElementById('modal-methodology');
+      const openModal = () => { modal.classList.remove('hidden'); modal.classList.add('flex'); };
+      const closeModal = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+      document.getElementById('btn-open-methodology').addEventListener('click', openModal);
+      document.getElementById('btn-close-methodology').addEventListener('click', closeModal);
+      document.getElementById('btn-close-methodology-bottom').addEventListener('click', closeModal);
+      modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+      // Global mode buttons
+      document.getElementById('btn-mode-explorador').addEventListener('click', () => applyMode('explorador'));
+      document.getElementById('btn-mode-ingeniero').addEventListener('click', () => applyMode('ingeniero'));
+
+      // Tab buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // Application case buttons (Tab 1)
+      document.getElementById('btn-case-aero').addEventListener('click', () => {
+        state.crystal.structure = 'FCC';
+        state.crystal.uvw = [0, 0, 1];
+        state.crystal.sigma = 70;
+        state.crystal.crss = 32;
+        syncCrystalInputs();
+        switchTab('tab-crystal');
+      });
+      document.getElementById('btn-case-bio-diff').addEventListener('click', () => {
+        const nitrIdx = DATA.mecanismos_difusion.findIndex(m => m.id === 'N_en_Fe_alpha');
+        configureDiffusionMechanism(nitrIdx >= 0 ? nitrIdx : 0);
+        state.diffusion.time_h = 8.0;
+        document.getElementById('slider-time').value = 8.0;
+        switchTab('tab-diffusio');
+      });
+      document.getElementById('btn-case-bio-slip').addEventListener('click', () => {
+        state.crystal.structure = 'BCC';
+        state.crystal.uvw = [1, 1, 1];
+        state.crystal.sigma = 95;
+        state.crystal.crss = 35;
+        syncCrystalInputs();
+        switchTab('tab-crystal');
+      });
+
+      // Populate Crystal presets
+      const selPreset = document.getElementById('select-preset-dir');
+      (DATA.direcciones_preset || []).forEach((d, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = d.etiqueta;
+        if (d.uvw.join(',') === '3,2,1') opt.selected = true;
+        selPreset.appendChild(opt);
+      });
+      selPreset.addEventListener('change', e => {
+        const preset = DATA.direcciones_preset[Number(e.target.value)];
+        if (preset) {
+          state.crystal.uvw = [...preset.uvw];
+          syncCrystalInputs();
+          updateCrystalTab();
+        }
+      });
+
+      // Crystal controls
+      document.getElementById('btn-struct-FCC').addEventListener('click', () => {
+        state.crystal.structure = 'FCC'; syncCrystalInputs(); updateCrystalTab();
+      });
+      document.getElementById('btn-struct-BCC').addEventListener('click', () => {
+        state.crystal.structure = 'BCC'; syncCrystalInputs(); updateCrystalTab();
+      });
+      ['input-u', 'input-v', 'input-w'].forEach((id, i) => {
+        document.getElementById(id).addEventListener('input', e => {
+          state.crystal.uvw[i] = Number(e.target.value) || 0;
+          updateCrystalTab();
+        });
+      });
+      document.getElementById('slider-sigma').addEventListener('input', e => {
+        state.crystal.sigma = Number(e.target.value);
+        document.getElementById('val-sigma').textContent = state.crystal.sigma;
+        updateCrystalTab();
+      });
+      document.getElementById('slider-crss').addEventListener('input', e => {
+        state.crystal.crss = Number(e.target.value);
+        document.getElementById('val-crss').textContent = Number(state.crystal.crss).toFixed(1).replace(/\.0$/, '');
+        updateCrystalTab();
+      });
+
+      // Populate Diffusion mechanisms
+      const selMech = document.getElementById('select-mechanism');
+      (DATA.mecanismos_difusion || []).forEach((m, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = m.nombre;
+        selMech.appendChild(opt);
+      });
+      selMech.addEventListener('change', e => configureDiffusionMechanism(Number(e.target.value)));
+
+      document.getElementById('slider-temp').addEventListener('input', e => {
+        state.diffusion.T_c = Number(e.target.value);
+        updateDiffusioTab();
+      });
+      document.getElementById('slider-time').addEventListener('input', e => {
+        state.diffusion.time_h = Number(e.target.value);
+        updateDiffusioTab();
+      });
+      document.getElementById('slider-cs').addEventListener('input', e => {
+        state.diffusion.Cs = Number(e.target.value);
+        updateDiffusioTab();
+      });
+      document.getElementById('slider-c0').addEventListener('input', e => {
+        state.diffusion.C0 = Number(e.target.value);
+        updateDiffusioTab();
+      });
+      document.getElementById('btn-reset-canvas').addEventListener('click', resetInterstitialAtoms);
+
+      // Minigame 1 events
+      document.querySelectorAll('.g1-mission-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.games.g1Mission = btn.dataset.mission;
+          document.querySelectorAll('.g1-mission-btn').forEach(b => {
+            const active = b.dataset.mission === state.games.g1Mission;
+            b.className = active
+              ? 'g1-mission-btn text-left p-3 rounded-xl border border-sky-400 bg-sky-500/15 transition'
+              : 'g1-mission-btn text-left p-3 rounded-xl border border-[#1E293B] bg-[#0F172A] hover:border-slate-600 transition';
+          });
+          const m = MISSIONS[state.games.g1Mission];
+          document.getElementById('g1-crss-val').textContent = `${m.crss.toFixed(1)} MPa`;
+          document.getElementById('g1-feedback').classList.add('hidden');
+          document.getElementById('g1-bar').style.width = '0%';
+          document.getElementById('g1-status-tag').textContent = 'Listo para ensayar';
+        });
+      });
+
+      document.querySelectorAll('.g1-ori-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.games.g1Ori = btn.dataset.ori.split(',').map(Number);
+          document.querySelectorAll('.g1-ori-btn').forEach(b => {
+            const active = b === btn;
+            b.className = active
+              ? 'g1-ori-btn py-2.5 rounded-lg border border-sky-400 bg-sky-500/20 font-mono font-bold text-sm text-sky-200 transition'
+              : 'g1-ori-btn py-2.5 rounded-lg border border-[#1E293B] bg-[#0F172A] font-mono font-bold text-sm text-slate-300 hover:border-slate-500 transition';
+          });
+        });
+      });
+      document.getElementById('btn-g1-run').addEventListener('click', runGame1);
+
+      // Minigame 2 events
+      document.getElementById('g2-slider-t').addEventListener('input', e => {
+        document.getElementById('g2-val-temp').textContent = e.target.value;
+      });
+      document.getElementById('g2-slider-time').addEventListener('input', e => {
+        document.getElementById('g2-val-time').textContent = Number(e.target.value).toFixed(1);
+      });
+      document.getElementById('btn-g2-bake').addEventListener('click', runGame2);
+      document.getElementById('btn-g2-new').addEventListener('click', generateNewFurnaceOrder);
+
+      // Window resize listener
+      window.addEventListener('resize', () => {
+        if (state.activeTab === 'tab-diffusio') resizeDiffusionCanvas();
+      });
+
+      // Boot defaults
+      syncCrystalInputs();
+      configureDiffusionMechanism(0);
+      renderGame2Order();
+      applyMode('explorador');
+      animateDiffusionCanvas();
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
